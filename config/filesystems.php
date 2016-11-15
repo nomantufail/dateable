@@ -56,10 +56,10 @@ return [
 
         's3' => [
             'driver' => 's3',
-            'key' => 'your-key',
-            'secret' => 'your-secret',
-            'region' => 'your-region',
-            'bucket' => 'your-bucket',
+            'key' => 'AKIAJWSYQUDR5HMJFPCA',
+            'secret' => '9HlOD6J3ZGKPG0HJUEPmRt6ItMRgAA/04dpzSlgi',
+            'region' => 'singapore',
+            'bucket' => 'jr-tech-test-bucket-1',
         ],
 
     ],

@@ -1,5 +1,5 @@
 <?php
-
+use Illuminate\Http\File;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -12,5 +12,5 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    \Illuminate\Support\Facades\Storage::disk('s3')->put('photos', new File(public_path('favicon.ico')), 'public');
 });
