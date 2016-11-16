@@ -12,5 +12,5 @@ use Illuminate\Http\File;
 */
 
 Route::get('/', function () {
-    \Illuminate\Support\Facades\Storage::disk('s3')->put('photos', new File(public_path('favicon.ico')), 'public');
+
 });
