@@ -28,7 +28,6 @@ class RequestHandler
         $requestClass = "Requests\\".$customRequest;
         /** @var Request $customRequest */
         $customRequest = new $requestClass();
-
         if(!$customRequest->authorize())
             return $this->response->respondOwnershipConstraintViolation();
         if(!$this->validate($customRequest))
