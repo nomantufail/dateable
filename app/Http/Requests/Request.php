@@ -9,11 +9,22 @@
 namespace Requests;
 
 
+use App\Libs\Auth\Auth;
+
 abstract class Request
 {
-
     public abstract function authorize();
     public abstract function rules();
+
+    /**
+     * This variable defines weather a request should be authenticated or not.
+     * */
+    public $authenticatable = true;
+
+    public function user()
+    {
+        return Auth::user();
+    }
 
     public function messages()
     {

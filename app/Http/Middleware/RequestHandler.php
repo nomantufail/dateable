@@ -2,7 +2,6 @@
 
 namespace App\Http\Middleware;
 
-use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Validator;
 use Requests\Request;
 use Closure;
@@ -28,6 +27,14 @@ class RequestHandler
         $requestClass = "Requests\\".$customRequest;
         /** @var Request $customRequest */
         $customRequest = new $requestClass();
+
+        if($customRequest->authenticatable){
+            if(isset(getallheaders()['Authentication']) && getallheaders()['Authentication'] != ""){
+
+            }else{
+                return $this->response->respondAuthenticationFailed();
+            }
+        }
 
         if(!$customRequest->authorize())
             return $this->response->respondOwnershipConstraintViolation();
