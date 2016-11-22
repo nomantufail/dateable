@@ -2,12 +2,13 @@
 
 namespace App;
 
+use App\Models\Model;
+use App\Traits\Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class User extends Authenticatable
+class User extends Model
 {
-    use Notifiable;
+    use Notifiable, Authenticatable;
 
     public $id = 0;
     /**
@@ -52,15 +53,5 @@ class User extends Authenticatable
     public function checkedIns()
     {
         return $this->hasMany('App\Models\CheckedIn');
-    }
-
-    public function setRawAttributes(array $attributes, $sync = false)
-    {
-        $this->id = $attributes['id'];
-        $this->attributes = $attributes;
-        if ($sync) {
-            $this->syncOriginal();
-        }
-        return $this;
     }
 }
