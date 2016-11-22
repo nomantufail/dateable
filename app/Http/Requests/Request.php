@@ -9,10 +9,15 @@
 namespace Requests;
 
 
+use App\Libs\Auth\Auth;
+
 abstract class Request
 {
 
-    public $authenticateable = false;
+    /**
+     * This variable defines weather a request should be authenticated or not.
+     * */
+    public $authenticatable = false;
     protected $autoTransform = false;
 
     public abstract function authorize();
@@ -30,12 +35,6 @@ abstract class Request
         })->toArray();
         return $transformedValues;
     }
-
-    public function messages()
-    {
-        return [];
-    }
-
     public function originalRequest()
     {
         return request();
@@ -63,5 +62,16 @@ abstract class Request
     public function file($key){
         return $this->originalRequest()->file($key);
     }
+
+    public function user()
+    {
+        return Auth::user();
+    }
+
+    public function messages()
+    {
+        return [];
+    }
+
 
 }

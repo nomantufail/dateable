@@ -18,5 +18,7 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:api');
 
 Route::get('/foo', function (Requests\Foo\FooRequest $request) {
-    dd($request->all());
+    /** @var \App\User $user */
+    $user = \App\User::find(1);
+    dd($user->id);
 })->middleware('requestHandler:Foo\FooRequest');
