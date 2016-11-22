@@ -1,0 +1,19 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class BlockedUser extends Model
+{
+    protected $fillables = ['object_id','subject_id'];
+
+    public function blockedBy()
+    {
+        return $this->belongsTo('App\User','object_id');
+    }
+    public function blockedUser()
+    {
+        return $this->belongsTo('App\User','subject_id');
+    }
+}

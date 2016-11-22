@@ -9,6 +9,7 @@ class User extends Authenticatable
 {
     use Notifiable;
 
+    public $id = 0;
     /**
      * The attributes that are mass assignable.
      *
@@ -26,4 +27,40 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    protected function blockedUsers()
+    {
+        return $this->hasMany('App\Models\BlockedUser','object_id');
+    }
+    public function likedUsers()
+    {
+        return $this->hasMany('App\Models\LikedUser','object_id');
+    }
+    public function likedBy()
+    {
+        return $this->hasMany('App\Models\LikedUser','subject_id');
+    }
+    public function blockedBy()
+    {
+        return $this->hasMany('App\Models\BlockedUser','subject_id');
+    }
+    public function interests()
+    {
+        return $this->hasOne('App\Models\UserInterest');
+    }
+
+    public function checkedIns()
+    {
+        return $this->hasMany('App\Models\CheckedIn');
+    }
+
+    public function setRawAttributes(array $attributes, $sync = false)
+    {
+        $this->id = $attributes['id'];
+        $this->attributes = $attributes;
+        if ($sync) {
+            $this->syncOriginal();
+        }
+        return $this;
+    }
 }
