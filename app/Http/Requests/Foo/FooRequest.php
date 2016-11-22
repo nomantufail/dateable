@@ -6,12 +6,6 @@ use Requests\Request;
 
 class FooRequest extends Request
 {
-    public function transform()
-    {
-        return [
-            'customer_id' => $this->originalRequest()->get('customer__id')
-        ];
-    }
     /**
      * Determine if the user is authorized to make this request.
      *
