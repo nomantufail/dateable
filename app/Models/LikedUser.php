@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-
 class LikedUser extends Model
 {
     protected $fillables = ['object_id','subject_id'];

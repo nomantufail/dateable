@@ -8,7 +8,7 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Model
 {
-    use Notifiable, Authenticatable;
+    use Notifiable;
 
     public $id = 0;
     /**
@@ -33,24 +33,23 @@ class User extends Model
     {
         return $this->hasMany('App\Models\BlockedUser','object_id');
     }
-    public function likedUsers()
+    protected function likedUsers()
     {
         return $this->hasMany('App\Models\LikedUser','object_id');
     }
-    public function likedBy()
+    protected function likedBy()
     {
         return $this->hasMany('App\Models\LikedUser','subject_id');
     }
-    public function blockedBy()
+    protected function blockedBy()
     {
         return $this->hasMany('App\Models\BlockedUser','subject_id');
     }
-    public function interests()
+    protected function interests()
     {
         return $this->hasOne('App\Models\UserInterest');
     }
-
-    public function checkedIns()
+    protected function checkedIns()
     {
         return $this->hasMany('App\Models\CheckedIn');
     }
