@@ -5,8 +5,10 @@ namespace App\Models;
 use App\Traits\Authenticatable;
 use Illuminate\Database\Eloquent\Model as EloquentModel;
 
-abstract class Model extends EloquentModel
+abstract class AuthenticatableModel extends Model
 {
+    use Authenticatable;
+
     public function setRawAttributes(array $attributes, $sync = false)
     {
         foreach($attributes as $key=>$value){

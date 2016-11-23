@@ -2,11 +2,10 @@
 
 namespace App;
 
-use App\Models\Model;
-use App\Traits\Authenticatable;
+use App\Models\AuthenticatableModel;
 use Illuminate\Notifications\Notifiable;
 
-class User extends Model
+class User extends AuthenticatableModel
 {
     use Notifiable;
 

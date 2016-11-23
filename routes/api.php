@@ -18,10 +18,7 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:api');
 
 Route::get('/foo', function (Requests\Foo\FooRequest $request) {
-    $user = new App\User();
-    $user->id = 4;
-    $user->name = "noman";
-    $user->save();
+
     \App\User::get()->each(function($user, $key){
         /** @var \App\User $user */
         dd($user->toJson());
