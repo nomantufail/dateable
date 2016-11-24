@@ -2,11 +2,16 @@
 
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Database\Migrations\Migration;
 
-class CreateBlockedUsersTable extends Migration
+class CreateBlockedUsersTable extends \Migrations\Migration
 {
+    public function fields()
+    {
+        return ['id','object_id','subject_id','updated_at','created_at'];
+    }
+
     private $table = 'blocked_users';
+
     /**
      * Run the migrations.
      *

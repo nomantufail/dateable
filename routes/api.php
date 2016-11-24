@@ -1,4 +1,12 @@
 <?php
+function get_string_between($string, $start, $end){
+    $string = ' ' . $string;
+    $ini = strpos($string, $start);
+    if ($ini == 0) return '';
+    $ini += strlen($start);
+    $len = strpos($string, $end, $ini) - $ini;
+    return substr($string, $ini, $len);
+}
 
 use Illuminate\Http\Request;
 
@@ -18,10 +26,13 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:api');
 
 Route::get('/foo', function (Requests\Foo\FooRequest $request) {
-
-    \App\User::get()->each(function($user, $key){
-        /** @var \App\User $user */
-        dd($user->toJson());
-    });
-
+    $user = new \App\User();
+    $user->email = uniqid()."@gmail.com";
+    $user->password = '111';
+    $user->name = 'noman';
+    $user->remember_token = "8979";
+    $user->save();
+    /** @var \App\User $user */
+    $user = \App\User::find(7);
+    return $user->blockedUsers;
 })->middleware('requestHandler:Foo\FooRequest');

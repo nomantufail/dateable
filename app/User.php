@@ -10,6 +10,13 @@ class User extends AuthenticatableModel
     use Notifiable;
 
     public $id = 0;
+    public $name = "";
+    public $email = "nomantufail100@gmail.com";
+    public $password = "111";
+    public $fb_id = 0;
+    public $session_id = "";
+    public $remember_token = "";
+
     /**
      * The attributes that are mass assignable.
      *
@@ -51,5 +58,10 @@ class User extends AuthenticatableModel
     protected function checkedIns()
     {
         return $this->hasMany('App\Models\CheckedIn');
+    }
+
+    public function tableDefinition()
+    {
+        return new \CreateUsersTable();
     }
 }

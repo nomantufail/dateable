@@ -15,4 +15,8 @@ class BlockedUser extends Model
     {
         return $this->belongsTo('App\User','subject_id');
     }
+    public function tableDefinition()
+    {
+        return new \CreateBlockedUsersTable();
+    }
 }
