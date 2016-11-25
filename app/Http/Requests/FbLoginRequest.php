@@ -36,9 +36,12 @@ class FbLoginRequest extends Request
     public function getFbUser()
     {
         $user = new User();
-        $user->fb_id = $this->get('fb_id');
+        $user->fb_id = $this->get('id');
+        $user->first_name = $this->get('first_name');
+        $user->last_name = $this->get('last_name');
         $user->email = $this->get('email');
-        $user->name = $this->get('name');
+        $user->gender = $this->get('gender');
+        $user->birthday = $this->get('birthday');
         $user->password = "";
         $user->remember_token = "";
         $user->access_token = "";

@@ -43,13 +43,12 @@ class LoginController extends Controller
     public function fblogin(FbLoginRequest $request)
     {
         /** @var User $user */
-        $user = $this->users->findByFbId($request->get('fb_id'));
+        $user = $this->users->findByFbId($request->get('id'));
         if($user == null){
             $user = $this->users->store($request->getFbUser());
         }
 
-        $user->access_token = bcrypt($request->get('fb_id'));
-
+        $user->access_token = bcrypt($request->get('id'));
         $user->save();
 
         return $this->response->respond([
