@@ -29,7 +29,11 @@ class FbLoginRequest extends Request
     public function rules()
     {
         return [
-            //
+            'id' => 'required',
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'email' => 'required',
+            'gender' => 'required'
         ];
     }
 
