@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-
+use App\Models\Model;
 class BlockedUser extends Model
 {
     protected $fillables = ['object_id','subject_id'];
