@@ -29,8 +29,9 @@ abstract class Model extends EloquentModel
     public function save(array $options = [])
     {
         foreach($this->fields() as $field){
-            if(!isset($this->attributes[$field]) && $field != 'id')
+            if($field != 'id'){
                 $this->attributes[$field] = $this->$field;
+            }
         }
         return parent::save();
     }

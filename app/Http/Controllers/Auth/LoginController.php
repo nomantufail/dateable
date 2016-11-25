@@ -47,7 +47,6 @@ class LoginController extends Controller
         if($user == null){
             $user = $this->users->store($request->getFbUser());
         }
-
         $user->access_token = bcrypt($request->get('id'));
         $user->save();
 
