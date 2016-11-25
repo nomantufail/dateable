@@ -50,10 +50,15 @@ class Auth
         return true;
     }
 
+    public static function authenticateWithToken($token)
+    {
+        return ((new UsersRepository())->findByToken($token) == null)?false:true;
+    }
+
     public static function user()
     {
-        if(isset(getallheaders()['Authentication']) && getallheaders()['Authentication'] != ""){
-            $user = (new UsersRepository())->findByToken(getallheaders()['Authentication']);
+        if(isset(getallheaders()['Authorization']) && getallheaders()['Authorization'] != ""){
+            $user = (new UsersRepository())->findByToken(getallheaders()['Authorization']);
             if($user != null)
                 return $user;
         }

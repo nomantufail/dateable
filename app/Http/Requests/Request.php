@@ -17,7 +17,7 @@ abstract class Request
     /**
      * This variable defines weather a request should be authenticated or not.
      * */
-    public $authenticatable = false;
+    public $authenticatable = true;
     protected $autoTransform = false;
 
     public abstract function authorize();

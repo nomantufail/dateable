@@ -7,6 +7,12 @@ use Illuminate\Database\Migrations\Migration;
 class CreateCheckedInsTable extends Migration
 {
     private $table = "checked_ins";
+
+    public function fields()
+    {
+        return ['id','user_id', 'lat','long','checked_in','checked_out','created_at','updated_at'];
+    }
+
     /**
      * Run the migrations.
      *

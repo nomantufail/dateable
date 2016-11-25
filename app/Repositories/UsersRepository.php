@@ -17,6 +17,16 @@ class UsersRepository extends Repository
         $this->setModel(new User());
     }
 
+    /**
+     * @param User $user
+     * @return mixed
+     */
+    public function store($user)
+    {
+        $user->save();
+        return $user;
+    }
+
     public function getByIds($ids = [])
     {
         return  $this->getModel()->whereIn('id', $ids)->get();
@@ -25,6 +35,11 @@ class UsersRepository extends Repository
     public function findByEmail($email)
     {
         return  $this->getModel()->where('email', $email)->first();
+    }
+
+    public function findByFbId($fbid)
+    {
+        return $this->getModel()->where('fb_id',$fbid)->first();
     }
 
     public function findByToken($token)

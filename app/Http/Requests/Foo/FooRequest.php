@@ -6,6 +6,9 @@ use Requests\Request;
 
 class FooRequest extends Request
 {
+    public function __construct(){
+        $this->authenticatable = true;
+    }
     /**
      * Determine if the user is authorized to make this request.
      *

@@ -9,13 +9,13 @@ class User extends AuthenticatableModel
 {
     use Notifiable;
 
-    public $id = 0;
-    public $name = "";
-    public $email = "nomantufail100@gmail.com";
-    public $password = "111";
-    public $fb_id = 0;
-    public $session_id = "";
-    public $remember_token = "";
+//    public $id = 0;
+//    public $name = "";
+//    public $email = "";
+//    public $password = "";
+//    public $fb_id = 0;
+//    public $access_token = "";
+//    public $remember_token = "";
 
     /**
      * The attributes that are mass assignable.

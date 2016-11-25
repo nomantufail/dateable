@@ -9,6 +9,7 @@
 namespace App\Repositories;
 
 
+use App\Models\Model;
 use Illuminate\Support\Facades\DB;
 
 class Repository
@@ -30,9 +31,14 @@ class Repository
         return $this->getModel()->all();
     }
 
-    public function store($attrs = [])
+    /**
+     * @param Model $model
+     * @return mixed
+     */
+    public function store($model)
     {
-        return $this->getModel()->create($attrs);
+        $model->save();
+        return $model;
     }
 
     public function insertMultiple($records = [])

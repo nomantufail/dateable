@@ -7,6 +7,12 @@ use Illuminate\Database\Migrations\Migration;
 class CreateLikedUsersTable extends Migration
 {
     private $table = "liked_users";
+
+    public function fields()
+    {
+        return ['id','object_id','subject_id','updated_at','created_at'];
+    }
+
     /**
      * Run the migrations.
      *

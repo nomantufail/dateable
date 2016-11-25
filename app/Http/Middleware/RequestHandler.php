@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Libs\Auth\Auth;
 use Illuminate\Support\Facades\Validator;
 use Requests\Request;
 use Closure;
@@ -29,8 +30,8 @@ class RequestHandler
         $customRequest = new $requestClass();
 
         if($customRequest->authenticatable){
-            if(isset(getallheaders()['Authentication']) && getallheaders()['Authentication'] != ""){
-
+            if(isset(getallheaders()['Authorization']) && getallheaders()['Authorization'] != ""){
+                return Auth::authenticateWithToken(getallheaders()['Authorization']);
             }else{
                 return $this->response->respondAuthenticationFailed();
             }

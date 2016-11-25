@@ -7,6 +7,12 @@ use Illuminate\Database\Migrations\Migration;
 class CreateUserInterestsTable extends Migration
 {
     private $table = "user_interests";
+
+    public function fields()
+    {
+        return ['id','user_id','age_min','age_max','gender','created_at','updated_at'];
+    }
+
     /**
      * Run the migrations.
      *

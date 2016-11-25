@@ -6,6 +6,10 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreatePasswordResetsTable extends Migration
 {
+    public function fields()
+    {
+        return ['email','token','created_at'];
+    }
     /**
      * Run the migrations.
      *
