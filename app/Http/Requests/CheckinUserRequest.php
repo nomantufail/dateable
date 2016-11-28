@@ -2,6 +2,7 @@
 
 namespace Requests;
 
+use App\Models\CheckedIn;
 use Requests\Request;
 
 class CheckinUserRequest extends Request
@@ -9,6 +10,7 @@ class CheckinUserRequest extends Request
 
     public function __construct(){
         $this->authenticatable = true;
+        $this->user = $this->user();
     }
 
     public function authorize()
@@ -27,5 +29,15 @@ class CheckinUserRequest extends Request
             'lat' => 'required',
             'long' => 'required'
         ];
+    }
+
+    public function checkedIn()
+    {
+        $checkedIn = new CheckedIn();
+        $checkedIn->lat = $this->get('lat');
+        $checkedIn->long = $this->get('long');
+        $checkedIn->user_id = $this->user->id;
+        $checkedIn->checked_in = date('Y-m-d H:i:s');
+        return $checkedIn;
     }
 }

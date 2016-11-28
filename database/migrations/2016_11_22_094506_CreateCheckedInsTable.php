@@ -25,8 +25,8 @@ class CreateCheckedInsTable extends Migration
             $table->integer('user_id')->unsigned()->index();
             $table->double('lat')->default(0);
             $table->double('long')->default(0);
-            $table->dateTime('checked_in');
-            $table->dateTime('checked_out');
+            $table->dateTime('checked_in')->nullable();
+            $table->dateTime('checked_out')->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')

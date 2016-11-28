@@ -9,6 +9,7 @@
 namespace App\Repositories;
 
 use App\Models\CheckedIn;
+use App\User;
 use Illuminate\Support\Facades\DB;
 
 class CheckedinsRepository extends Repository
@@ -17,4 +18,15 @@ class CheckedinsRepository extends Repository
     {
         $this->setModel(new CheckedIn());
     }
+
+    /**
+     * @param $userId
+     * @return mixed
+     */
+    public function checkoutPreviousCheckIns($userId)
+    {
+        return $this->getModel()->where('user_id',$userId)->update(['checked_out'=>date('Y-m-d H:i:s')]);
+    }
+
+
 }
