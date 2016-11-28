@@ -4,7 +4,7 @@ namespace Requests;
 
 use Requests\Request;
 
-class CheckoutUserRequest extends Request
+class GetUsersStatusOnLocationRequest extends Request
 {
 
     public function __construct(){

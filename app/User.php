@@ -54,7 +54,7 @@ class User extends AuthenticatableModel
     }
     protected function interests()
     {
-        return $this->hasOne('App\Models\UserInterest');
+        return $this->hasOne('App\Models\UserInterests');
     }
     protected function checkedIns()
     {

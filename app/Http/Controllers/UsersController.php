@@ -7,6 +7,8 @@ use App\Http\Response;
 use App\Repositories\CheckedinsRepository;
 use App\Repositories\UsersRepository;
 use Requests\CheckinUserRequest;
+use Requests\CheckoutUserRequest;
+use Requests\GetUsersStatusOnLocationRequest;
 
 class UsersController extends ParentController
 {
@@ -32,8 +34,16 @@ class UsersController extends ParentController
         }
     }
 
-    public function checkoutUser(CheckinUserRequest $request)
+    public function checkoutUser(CheckoutUserRequest $request)
     {
         return $this->checkIns->checkoutPreviousCheckIns($request->user->id)?$this->response->respond([]):$this->response->respondInternalServerError();
+    }
+
+    public function usersStatusOnLocation(GetUsersStatusOnLocationRequest $request)
+    {
+        return $this->response->respond(['data'=>[
+            'datables' => $this->users->countDatablesAtLocation($request->get('location_id'), $request->user->id),
+            'checkedIns' => $this->users->countCheckInsAtLocation($request->get('location_id')),
+        ]]);
     }
 }

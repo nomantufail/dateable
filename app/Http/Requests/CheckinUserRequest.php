@@ -25,14 +25,14 @@ class CheckinUserRequest extends Request
     public function rules()
     {
         return [
-            'lat' => 'required',
-            'long' => 'required'
+            'location_id' => 'required'
         ];
     }
 
     public function checkedIn()
     {
         $checkedIn = new CheckedIn();
+        $checkedIn->location_id = $this->get('location_id');
         $checkedIn->lat = $this->get('lat');
         $checkedIn->long = $this->get('long');
         $checkedIn->user_id = $this->user->id;
