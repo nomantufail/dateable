@@ -11,4 +11,9 @@ class CheckedIn extends Model
     {
         $this->belongsTo('App\User');
     }
+
+    public function tableDefinition()
+    {
+        return new \CreateCheckedInsTable();
+    }
 }
