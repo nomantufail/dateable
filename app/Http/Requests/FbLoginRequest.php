@@ -3,6 +3,7 @@
 namespace Requests;
 
 use App\User;
+use Carbon\Carbon;
 use Requests\Request;
 
 class FbLoginRequest extends Request
@@ -45,7 +46,7 @@ class FbLoginRequest extends Request
         $user->last_name = $this->get('last_name');
         $user->email = $this->get('email');
         $user->gender = $this->get('gender');
-        $user->birthday = $this->get('birthday');
+        $user->birthday = Carbon::createFromFormat('m/d/Y',$this->get('birthday'))->toDateString();
         $user->password = "";
         $user->remember_token = "";
         $user->access_token = "";

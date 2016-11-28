@@ -9,7 +9,6 @@ class CheckinUserRequest extends Request
 {
 
     public function __construct(){
-        $this->authenticatable = true;
         $this->user = $this->user();
     }
 

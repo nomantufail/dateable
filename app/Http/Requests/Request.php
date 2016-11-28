@@ -27,6 +27,11 @@ abstract class Request
     public abstract function authorize();
     public abstract function rules();
 
+    public function __construct()
+    {
+        $this->user = $this->user();
+    }
+
     public function transform()
     {
         return [];

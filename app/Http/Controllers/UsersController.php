@@ -22,14 +22,18 @@ class UsersController extends ParentController
 
     public function postCheckIn(CheckinUserRequest $request)
     {
-        $this->checkIns->checkoutPreviousCheckIns($request->user->id);
-        return $this->response->respond(['data'=>[
-            'checkIn' =>$this->checkIns->store($request->checkedIn())
-        ]]);
+        try{
+            $this->checkIns->checkoutPreviousCheckIns($request->user->id);
+            return $this->response->respond(['data'=>[
+                'checkIn' =>$this->checkIns->store($request->checkedIn())
+            ]]);
+        }catch (\Exception $e){
+            return $this->response->respondInternalServerError($e->getMessage());
+        }
     }
 
-    public function getCheckedInUsers()
+    public function checkoutUser(CheckinUserRequest $request)
     {
-
+        return $this->checkIns->checkoutPreviousCheckIns($request->user->id)?$this->response->respond([]):$this->response->respondInternalServerError();
     }
 }

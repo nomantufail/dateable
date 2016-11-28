@@ -18,3 +18,4 @@ Route::get('/user', function (Request $request) {
 
 Route::post('/fblogin', 'Auth\LoginController@fblogin')->middleware('requestHandler:FbLoginRequest');
 Route::get('/user/checkin', 'UsersController@postCheckIn')->middleware('requestHandler:CheckinUserRequest');
+Route::get('/user/checkout', 'UsersController@checkoutUser')->middleware('requestHandler:CheckoutUserRequest');

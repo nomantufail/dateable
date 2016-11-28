@@ -4,7 +4,7 @@ namespace Requests;
 
 use Requests\Request;
 
-class DummyClass extends Request
+class CheckoutUserRequest extends Request
 {
 
     public function __construct(){
@@ -28,7 +28,8 @@ class DummyClass extends Request
     public function rules()
     {
         return [
-            //
+            'lat' => 'required',
+            'long' => 'required'
         ];
     }
 }

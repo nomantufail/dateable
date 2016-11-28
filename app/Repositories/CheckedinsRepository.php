@@ -28,5 +28,4 @@ class CheckedinsRepository extends Repository
         return $this->getModel()->where('user_id',$userId)->update(['checked_out'=>date('Y-m-d H:i:s')]);
     }
 
-
 }
