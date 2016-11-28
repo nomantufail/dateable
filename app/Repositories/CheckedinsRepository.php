@@ -25,7 +25,8 @@ class CheckedinsRepository extends Repository
      */
     public function checkoutPreviousCheckIns($userId)
     {
-        return $this->getModel()->where('user_id',$userId)->update(['checked_out'=>date('Y-m-d H:i:s')]);
+        return $this->getModel()->where('user_id',$userId)
+            ->where('checked_out',null)->update(['checked_out'=>date('Y-m-d H:i:s')]);
     }
 
 }
