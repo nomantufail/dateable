@@ -10,6 +10,7 @@ namespace App\Repositories;
 
 use App\Models\UserInterests;
 use App\User;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class UsersRepository extends Repository
@@ -39,27 +40,47 @@ class UsersRepository extends Repository
         return $this->getCheckInsAtLocation($locationId)->count();
     }
 
+    public function getMatches($locationId, $userId)
+    {
+        $userFields = $this->getUserTableFields();
+        $interestsTable = (new UserInterestsRepository())->getModel()->getTable();
+        $checkinsTable = (new CheckedinsRepository())->getModel()->getTable();
+        /** @var UserInterests $interests */
+        $usersTable = $this->getModel()->getTable();
+        return $this->getModel()
+            ->select(DB::raw("users.*"))
+            ->where($checkinsTable.".location_id",$locationId)
+            ->where($checkinsTable.".checked_out",null)
+            ->Where(function ($query)use ($userId){
+                $this->QUERY_usersInterestedInMe($query, $userId);
+            })
+            ->orWhere(function ($query) use ($userId){
+                $this->QUERY_usersIamInterestedIn($query, $userId);
+            })
+            ->leftJoin($interestsTable, $usersTable.".id",$interestsTable.".user_id")
+            ->leftJoin($checkinsTable, $usersTable.".id",$checkinsTable.".user_id")
+            ->groupBy($userFields)
+            ->get();
+    }
+
     public function getDatablesAtLocation($locationId, $userId)
     {
         $userFields = $this->getUserTableFields();
         $interestsTable = (new UserInterestsRepository())->getModel()->getTable();
         $checkinsTable = (new CheckedinsRepository())->getModel()->getTable();
         /** @var UserInterests $interests */
-        $interests = $this->findById($userId)->interests;
         $usersTable = $this->getModel()->getTable();
-        $query = $this->getModel()
+        return $this->getModel()
             ->select($userFields)
-            ->where($checkinsTable.".location_i",$locationId)
+            ->where($checkinsTable.".location_id",$locationId)
             ->where($checkinsTable.".checked_out",null)
-            ->Where(function ($query)use ($interests, $usersTable, $userId){
+            ->Where(function ($query)use ($userId){
                 $this->QUERY_usersIamInterestedIn($query, $userId);
-            });
-        $results = $query->leftJoin($interestsTable, $usersTable.".id",$interestsTable.".user_id")
+            })
+            ->leftJoin($interestsTable, $usersTable.".id",$interestsTable.".user_id")
             ->leftJoin($checkinsTable, $usersTable.".id",$checkinsTable.".user_id")
             ->groupBy($userFields)
             ->get();
-
-        return $results;
     }
 
     public function getCheckInsAtLocation($locationId)
@@ -102,16 +123,17 @@ class UsersRepository extends Repository
         $user = $this->findById($userId);
         $interests = $user->interests;
         $interestsTable = (new UserInterestsRepository())->getModel()->getTable();
+        $myAge = Carbon::createFromFormat('Y-m-d',$user->birthday)->diff(Carbon::now())->days/365;
 
         $query->where($usersTable.".id",'!=',$userId); /** excluding current logged in user. */
 
         /** Age matching */
-        $query->where($interestsTable."age_min",'>=',DB::raw("DATEDIFF(CURDATE(), ".$this->getModel()->getTable().".birthday)/365"))
-            ->Where(DB::raw("DATEDIFF(CURDATE(), ".$this->getModel()->getTable().".birthday)/365"),'<=',$interests->age_max);
+        $query->where($interestsTable.".age_min",'<=',$myAge)
+            ->where($interestsTable.".age_max",'>=',$myAge);
 
         /** Gender Matching */
         if($interests->gender != 2){
-            $query->where($this->getModel()->getTable().".gender",$interests->gender);
+            $query->where($interestsTable.".gender",$user->gender);
         }
         return $query;
     }
