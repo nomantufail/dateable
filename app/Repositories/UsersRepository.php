@@ -8,10 +8,12 @@
 
 namespace App\Repositories;
 
+use App\Events\UserRegistered;
 use App\Models\UserInterests;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Event;
 
 class UsersRepository extends Repository
 {
@@ -27,6 +29,7 @@ class UsersRepository extends Repository
     public function store($user)
     {
         $user->save();
+        Event::fire(new UserRegistered($user));
         return $user;
     }
 

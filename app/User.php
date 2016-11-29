@@ -17,6 +17,8 @@ class User extends AuthenticatableModel
     public $fb_id = 0;
     public $access_token = "";
     public $remember_token = "";
+    public $gender = 0;
+    public $birthday = "";
 
     /**
      * The attributes that are mass assignable.
