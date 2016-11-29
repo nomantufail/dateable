@@ -23,6 +23,7 @@ class AddDefaultSettings
      */
     public function handle(UserRegistered $event)
     {
+        dd($event->user);
         $userInterests = new UserInterests();
         $userInterests->user_id = $event->user->id;
         $userInterests->gender = ($event->user->gender == 1)?0:1;
