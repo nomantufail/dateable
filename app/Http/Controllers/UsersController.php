@@ -42,7 +42,7 @@ class UsersController extends ParentController
     public function usersStatusOnLocation(GetUsersStatusOnLocationRequest $request)
     {
         return $this->response->respond(['data'=>[
-            'datables' => $this->users->getMatches($request->get('location_id'), $request->user->id),
+            'datables' => $this->users->countDatablesAtLocation($request->get('location_id'), $request->user->id),
             'checkedIns' => $this->users->countCheckInsAtLocation($request->get('location_id')),
         ]]);
     }
