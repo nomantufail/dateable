@@ -41,38 +41,30 @@ class UsersRepository extends Repository
 
     public function getDatablesAtLocation($locationId, $userId)
     {
-        $userFields = [];
-        collect($this->getModel()->fields())->each(function($value, $key) use(&$userFields){
-            $userFields[] = "users.".$value;
-        });
+        $userFields = $this->getUserTableFields();
         $interestsTable = (new UserInterestsRepository())->getModel()->getTable();
         $checkinsTable = (new CheckedinsRepository())->getModel()->getTable();
         /** @var UserInterests $interests */
         $interests = $this->findById($userId)->interests;
         $usersTable = $this->getModel()->getTable();
-        return $this->getModel()
+        $query = $this->getModel()
             ->select($userFields)
-            ->where($checkinsTable.".location_id",$locationId)
+            ->where($checkinsTable.".location_i",$locationId)
             ->where($checkinsTable.".checked_out",null)
-            ->Where(function ($query)use ($interests) {
-                $query->where(DB::raw("DATEDIFF(CURDATE(), ".$this->getModel()->getTable().".birthday)/365"),'>=',$interests->age_min)
-                    ->Where(DB::raw("DATEDIFF(CURDATE(), ".$this->getModel()->getTable().".birthday)/365"),'<=',$interests->age_max);
-                if($interests->gender != 2){
-                    $query->where($this->getModel()->getTable().".gender",$interests->gender);
-                }
-            })
-            ->leftJoin($interestsTable, $usersTable.".id",$interestsTable.".user_id")
+            ->Where(function ($query)use ($interests, $usersTable, $userId){
+                $this->QUERY_usersIamInterestedIn($query, $userId);
+            });
+        $results = $query->leftJoin($interestsTable, $usersTable.".id",$interestsTable.".user_id")
             ->leftJoin($checkinsTable, $usersTable.".id",$checkinsTable.".user_id")
             ->groupBy($userFields)
             ->get();
+
+        return $results;
     }
 
     public function getCheckInsAtLocation($locationId)
     {
-        $userFields = [];
-        collect($this->getModel()->fields())->each(function($value, $key) use(&$userFields){
-            $userFields[] = "users.".$value;
-        });
+        $userFields = $this->getUserTableFields();
         $interestsTable = (new UserInterestsRepository())->getModel()->getTable();
         $checkinsTable = (new CheckedinsRepository())->getModel()->getTable();
         $usersTable = $this->getModel()->getTable();
@@ -86,6 +78,43 @@ class UsersRepository extends Repository
             ->get();
     }
 
+    private function QUERY_usersIamInterestedIn($query, $userId)
+    {
+        $usersTable = $this->getModel()->getTable();
+        $interests = $this->findById($userId)->interests;
+
+        $query->where($usersTable.".id",'!=',$userId); /** excluding current logged in user. */
+
+        /** Age matching */
+        $query->where(DB::raw("DATEDIFF(CURDATE(), ".$this->getModel()->getTable().".birthday)/365"),'>=',$interests->age_min)
+            ->Where(DB::raw("DATEDIFF(CURDATE(), ".$this->getModel()->getTable().".birthday)/365"),'<=',$interests->age_max);
+
+        /** Gender Matching */
+        if($interests->gender != 2){
+            $query->where($this->getModel()->getTable().".gender",$interests->gender);
+        }
+        return $query;
+    }
+
+    private function QUERY_usersInterestedInMe($query, $userId)
+    {
+        $usersTable = $this->getModel()->getTable();
+        $user = $this->findById($userId);
+        $interests = $user->interests;
+        $interestsTable = (new UserInterestsRepository())->getModel()->getTable();
+
+        $query->where($usersTable.".id",'!=',$userId); /** excluding current logged in user. */
+
+        /** Age matching */
+        $query->where($interestsTable."age_min",'>=',DB::raw("DATEDIFF(CURDATE(), ".$this->getModel()->getTable().".birthday)/365"))
+            ->Where(DB::raw("DATEDIFF(CURDATE(), ".$this->getModel()->getTable().".birthday)/365"),'<=',$interests->age_max);
+
+        /** Gender Matching */
+        if($interests->gender != 2){
+            $query->where($this->getModel()->getTable().".gender",$interests->gender);
+        }
+        return $query;
+    }
 
     public function getByIds($ids = [])
     {
@@ -118,5 +147,14 @@ class UsersRepository extends Repository
     public function admins()
     {
         return $this->getModel()->where('role', 1)->get();
+    }
+
+    private function getUserTableFields()
+    {
+        $userFields = [];
+        collect($this->getModel()->fields())->each(function($value, $key) use(&$userFields){
+            $userFields[] = "users.".$value;
+        });
+        return $userFields;
     }
 }
