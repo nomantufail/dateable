@@ -7,6 +7,7 @@ class UserInterests extends Model
     protected $fillable = ["user_id", "age_min", "age_max", "gender"];
 
     public $id = 0;
+    public $user_id = 0;
     public $age_min = 0;
     public $age_max = 0;
     public $gender = 0;

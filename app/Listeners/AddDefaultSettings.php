@@ -24,6 +24,7 @@ class AddDefaultSettings
     public function handle(UserRegistered $event)
     {
         $userInterests = new UserInterests();
+        $userInterests->user_id = $event->user->id;
         $userInterests->gender = ($event->user->gender == 1)?0:1;
         $userInterests->age_max = 30;
         $userInterests->age_min = 18;

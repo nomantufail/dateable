@@ -34,7 +34,8 @@ class FbLoginRequest extends Request
             'first_name' => 'required',
             'last_name' => 'required',
             'email' => 'required',
-            'gender' => 'required'
+            'gender' => 'required',
+            'birthday' => 'required'
         ];
     }
 
