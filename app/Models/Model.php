@@ -14,6 +14,7 @@ abstract class Model extends EloquentModel
     public abstract function tableDefinition();
     public function setRawAttributes(array $attributes, $sync = false)
     {
+        dd($attributes);
         foreach($attributes as $key=>$value){
             if(isset($this->$key)){
                 $this->$key = $value;

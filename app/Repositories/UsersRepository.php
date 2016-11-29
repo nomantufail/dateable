@@ -29,7 +29,6 @@ class UsersRepository extends Repository
     public function store($user)
     {
         $user->save();
-        dd($user);
         Event::fire(new UserRegistered($user));
         return $user;
     }
