@@ -21,3 +21,4 @@ Route::post('/user/checkin', 'UsersController@postCheckIn')->middleware('request
 Route::post('/user/checkout', 'UsersController@checkoutUser')->middleware('requestHandler:CheckoutUserRequest');
 Route::get('/location/users_status', 'UsersController@usersStatusOnLocation')->middleware('requestHandler:GetUsersStatusOnLocationRequest');
 Route::post('/user/block', 'UsersController@block')->middleware('requestHandler:BlockUserRequest');
+Route::post('/user/unblock', 'UsersController@unblock')->middleware('requestHandler:UnblockUserRequest');

@@ -40,6 +40,11 @@ class UsersRepository extends Repository
         return $blockedUserModel;
     }
 
+    public function unblockUser($where)
+    {
+        return (new BlockedUser())->where($where)->delete();
+    }
+
     /**
      * @return User $user
      */

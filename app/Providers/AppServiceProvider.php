@@ -18,7 +18,6 @@ class AppServiceProvider extends ServiceProvider
         header("Access-Control-Allow-Origin: *");
         header("Access-Control-Allow-Origin: *");
         header("Access-Control-Allow-Origin: *");
-
         header("Content-Type: application/json: true");
         header('Access-Control-Allow-Credentials: true');
         header("Access-Control-Allow-Headers: X-Requested-With, Content-Type, Origin, Authorization, Accept, Client-Security-Token, Accept-Encoding");

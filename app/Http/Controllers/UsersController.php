@@ -10,6 +10,7 @@ use Requests\BlockUserRequest;
 use Requests\CheckinUserRequest;
 use Requests\CheckoutUserRequest;
 use Requests\GetUsersStatusOnLocationRequest;
+use Requests\UnblockUserRequest;
 
 class UsersController extends ParentController
 {
@@ -42,7 +43,12 @@ class UsersController extends ParentController
 
     public function block(BlockUserRequest $request)
     {
-        return $this->users->blockUser($request->blockedUserModel());
+        return $this->response->respond(['data'=>$this->users->blockUser($request->blockedUserModel())]);
+    }
+
+    public function unblock(UnblockUserRequest $request)
+    {
+        return $this->response->respond(['data'=>$this->users->unblockUser(['object_id'=>$request->user->id, 'subject_id'=> $request->get('user_id')])]);
     }
 
     public function usersStatusOnLocation(GetUsersStatusOnLocationRequest $request)
