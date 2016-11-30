@@ -23,7 +23,7 @@ class CreateCheckedInsTable extends Migration
         Schema::create($this->table, function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned()->index();
-            $table->bigInteger('location_id');
+            $table->string('location_id')->default("");
             $table->double('lat')->default(0)->nullable();
             $table->double('long')->default(0)->nullable();
             $table->dateTime('checked_in')->nullable();
