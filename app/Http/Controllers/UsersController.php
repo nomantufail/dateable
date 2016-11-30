@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use App\Http\Response;
 use App\Repositories\CheckedinsRepository;
 use App\Repositories\UsersRepository;
+use Requests\BlockUserRequest;
 use Requests\CheckinUserRequest;
 use Requests\CheckoutUserRequest;
 use Requests\GetUsersStatusOnLocationRequest;
@@ -37,6 +38,11 @@ class UsersController extends ParentController
     public function checkoutUser(CheckoutUserRequest $request)
     {
         return $this->checkIns->checkoutPreviousCheckIns($request->user->id)?$this->response->respond([]):$this->response->respondInternalServerError();
+    }
+
+    public function block(BlockUserRequest $request)
+    {
+        return $this->users->blockUser($request->blockedUserModel());
     }
 
     public function usersStatusOnLocation(GetUsersStatusOnLocationRequest $request)

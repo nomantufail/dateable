@@ -20,3 +20,4 @@ Route::post('/fblogin', 'Auth\LoginController@fblogin')->middleware('requestHand
 Route::post('/user/checkin', 'UsersController@postCheckIn')->middleware('requestHandler:CheckinUserRequest');
 Route::post('/user/checkout', 'UsersController@checkoutUser')->middleware('requestHandler:CheckoutUserRequest');
 Route::get('/location/users_status', 'UsersController@usersStatusOnLocation')->middleware('requestHandler:GetUsersStatusOnLocationRequest');
+Route::post('/user/block', 'UsersController@block')->middleware('requestHandler:BlockUserRequest');
