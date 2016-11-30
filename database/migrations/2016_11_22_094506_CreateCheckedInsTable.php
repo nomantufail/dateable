@@ -24,8 +24,8 @@ class CreateCheckedInsTable extends Migration
             $table->increments('id');
             $table->integer('user_id')->unsigned()->index();
             $table->bigInteger('location_id');
-            $table->double('lat')->default(0);
-            $table->double('long')->default(0);
+            $table->double('lat')->default(0)->nullable();
+            $table->double('long')->default(0)->nullable();
             $table->dateTime('checked_in')->nullable();
             $table->dateTime('checked_out')->nullable();
             $table->timestamps();

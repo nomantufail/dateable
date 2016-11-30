@@ -45,13 +45,33 @@ class UsersRepository extends Repository
 
     public function getMatches($locationId, $userId)
     {
+        $usersTable = $this->getModel()->getTable();
+        $user = $this->findById($userId);
+        $interests = $user->interests;
         $userFields = $this->getUserTableFields();
         $interestsTable = (new UserInterestsRepository())->getModel()->getTable();
         $checkinsTable = (new CheckedinsRepository())->getModel()->getTable();
+        $myAge = Carbon::createFromFormat('Y-m-d',$user->birthday)->diff(Carbon::now())->days/365;
+
         /** @var UserInterests $interests */
         $usersTable = $this->getModel()->getTable();
         return $this->getModel()
-            ->select(DB::raw("users.*"))
+            ->select(DB::raw(" users.*,
+                CASE
+                    WHEN DATEDIFF(CURDATE(), ".$usersTable.".birthday)/365 >= ".$interests->age_min." AND DATEDIFF(CURDATE(), ".$usersTable.".birthday)/365 <= ".$interests->age_max.(($interests->gender != 2)?" AND ".$usersTable.".gender = ".$interests->gender:"")."
+                        THEN
+                            true
+                        else
+                            false
+                END as i_am_interested_in ,
+                CASE
+                    WHEN ".$interestsTable.".age_min <= ".$myAge." AND ".$interestsTable.".age_max >= ".$myAge.(($interests->gender != 2)?" AND ".$interestsTable.".gender = ".$user->gender:"")."
+                        THEN
+                            true
+                        else
+                            false
+                END as interested_in_me
+            "))
             ->where($checkinsTable.".location_id",$locationId)
             ->where($checkinsTable.".checked_out",null)
             ->Where(function ($query)use ($userId){
@@ -62,7 +82,7 @@ class UsersRepository extends Repository
             })
             ->leftJoin($interestsTable, $usersTable.".id",$interestsTable.".user_id")
             ->leftJoin($checkinsTable, $usersTable.".id",$checkinsTable.".user_id")
-            ->groupBy($userFields)
+            //->groupBy($userFields)
             ->get();
     }
 
@@ -115,7 +135,7 @@ class UsersRepository extends Repository
 
         /** Gender Matching */
         if($interests->gender != 2){
-            $query->where($this->getModel()->getTable().".gender",$interests->gender);
+            $query->where($usersTable.".gender",$interests->gender);
         }
         return $query;
     }
