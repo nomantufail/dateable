@@ -22,3 +22,5 @@ Route::post('/user/checkout', 'UsersController@checkoutUser')->middleware('reque
 Route::get('/location/users_status', 'UsersController@usersStatusOnLocation')->middleware('requestHandler:GetUsersStatusOnLocationRequest');
 Route::post('/user/block', 'UsersController@block')->middleware('requestHandler:BlockUserRequest');
 Route::post('/user/unblock', 'UsersController@unblock')->middleware('requestHandler:UnblockUserRequest');
+Route::post('/user/like', 'UsersController@like')->middleware('requestHandler:LikeUserRequest');
+Route::get('/users/blocked', 'UsersController@blockedUsers')->middleware('requestHandler:GetBlockedUsersRequest');

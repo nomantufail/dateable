@@ -45,6 +45,16 @@ class UsersRepository extends Repository
         return (new BlockedUser())->where($where)->delete();
     }
 
+    public function getBlockedUsersByUserId($userId)
+    {
+        $usersTable = $this->getModel()->getTable();
+        $blockedUsersTable = (new BlockedUser())->getTable();
+        return (new BlockedUser())
+            ->select(DB::raw($usersTable.".*"))
+            ->where('object_id',$userId)
+            ->leftJoin($usersTable,$usersTable.'.id',$blockedUsersTable.'.subject_id')->get();
+    }
+
     /**
      * @return User $user
      */

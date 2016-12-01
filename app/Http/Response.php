@@ -58,7 +58,7 @@ class Response
      * following function accepts data from
      * controllers and return a pre-setted view.
      **/
-    public function respond(array $response, array $headers = []){
+    public function respond(array $response = [], array $headers = []){
         $response['status'] = ($this->getHttpStatus() == 200)?1:0;
         $response['message'] = (isset($response['message']))?$response['message']:(($response['status'] == 1)?config('constants.SUCCESS_MESSAGE'):config('constants.ERROR_MESSAGE'));
         $response['access_token'] = (!isset($response['access_token']))?((Auth::user() != null)?Auth::user()->access_token: ""):$response['access_token'];

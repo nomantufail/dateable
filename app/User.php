@@ -38,27 +38,27 @@ class User extends AuthenticatableModel
         'password', 'remember_token',
     ];
 
-    protected function blockedUsers()
+    public function blockedUsers()
     {
         return $this->hasMany('App\Models\BlockedUser','object_id');
     }
-    protected function likedUsers()
+    public function likedUsers()
     {
         return $this->hasMany('App\Models\LikedUser','object_id');
     }
-    protected function likedBy()
+    public function likedBy()
     {
         return $this->hasMany('App\Models\LikedUser','subject_id');
     }
-    protected function blockedBy()
+    public function blockedBy()
     {
         return $this->hasMany('App\Models\BlockedUser','subject_id');
     }
-    protected function interests()
+    public function interests()
     {
         return $this->hasOne('App\Models\UserInterests');
     }
-    protected function checkedIns()
+    public function checkedIns()
     {
         return $this->hasMany('App\Models\CheckedIn');
     }
