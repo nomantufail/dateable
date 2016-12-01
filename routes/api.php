@@ -25,3 +25,4 @@ Route::post('/user/unblock', 'UsersController@unblock')->middleware('requestHand
 Route::post('/user/like', 'UsersController@like')->middleware('requestHandler:LikeUserRequest');
 Route::get('/users/blocked', 'UsersController@blockedUsers')->middleware('requestHandler:GetBlockedUsersRequest');
 Route::post('/user/interests/update', 'UsersController@updateInterests')->middleware('requestHandler:UpdateUserInterestsRequest');
+Route::post('/user/account/deactivate', 'UsersController@deactivate')->middleware('requestHandler:DeactivateUserRequest');

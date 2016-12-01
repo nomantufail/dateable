@@ -20,6 +20,7 @@ class User extends AuthenticatableModel
     public $remember_token = "";
     public $gender = 0;
     public $birthday = "";
+    public $active = 1;
 
     /**
      * The attributes that are mass assignable.

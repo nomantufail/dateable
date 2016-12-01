@@ -62,7 +62,9 @@ class UsersRepository extends Repository
         return (new BlockedUser())
             ->select(DB::raw($usersTable.".*"))
             ->where('object_id',$userId)
-            ->leftJoin($usersTable,$usersTable.'.id',$blockedUsersTable.'.subject_id')->get();
+            ->where($usersTable.".active",1)
+            ->leftJoin($usersTable,$usersTable.'.id',$blockedUsersTable.'.subject_id')
+            ->get();
     }
 
     /**
@@ -70,7 +72,10 @@ class UsersRepository extends Repository
      */
     public function findBlockedUser($where)
     {
-        return (new BlockedUser())->where($where)->first();
+        $usersTable = $this->getModel()->getTable();
+        return (new BlockedUser())->where($where)
+            ->where($usersTable.".active",1)
+            ->first();
     }
 
     public function countDatablesAtLocation($locationId, $userId)
@@ -91,6 +96,7 @@ class UsersRepository extends Repository
         $userFields = $this->getUserTableFields();
         $interestsTable = (new UserInterestsRepository())->getModel()->getTable();
         $checkinsTable = (new CheckedinsRepository())->getModel()->getTable();
+        $blockedUsersTable = (new BlockedUser())->getModel()->getTable();
         $myAge = Carbon::createFromFormat('Y-m-d',$user->birthday)->diff(Carbon::now())->days/365;
 
         /** @var UserInterests $interests */
@@ -115,6 +121,16 @@ class UsersRepository extends Repository
             "))
             ->where($checkinsTable.".location_id",$locationId)
             ->where($checkinsTable.".checked_out",null)
+            ->where(function($query)use($blockedUsersTable,$userId){
+                $query->where(function($query)use($blockedUsersTable,$userId){
+                    $query->where("users_blocked_by_me.object_id","!=",$userId);
+                    $query->orWhere("users_blocked_by_me.object_id",null);
+                });
+                $query->where(function($query)use($blockedUsersTable,$userId){
+                    $query->where("users_who_blocked_me.subject_id","!=",$userId);
+                    $query->orWhere("users_who_blocked_me.object_id",null);
+                });
+            })
             ->Where(function ($query)use ($user){
                 $query->where(function ($query)use ($user){
                     $this->QUERY_usersInterestedInMe($query, $user);
@@ -123,8 +139,11 @@ class UsersRepository extends Repository
                     $this->QUERY_usersIamInterestedIn($query, $user);
                 });
             })
+            ->where($usersTable.".active",1)
             ->leftJoin($interestsTable, $usersTable.".id",$interestsTable.".user_id")
             ->leftJoin($checkinsTable, $usersTable.".id",$checkinsTable.".user_id")
+            ->leftJoin($blockedUsersTable." as users_blocked_by_me", "users_blocked_by_me.subject_id",$usersTable.".id") //ignoring users blocked by me
+            ->leftJoin($blockedUsersTable." as users_who_blocked_me", "users_who_blocked_me.object_id",$usersTable.".id") //ignoring users who blocked me
             ->groupBy(array_merge($userFields,['interested_in_me','i_am_interested_in']))
             ->get();
     }
@@ -150,16 +169,17 @@ class UsersRepository extends Repository
                     $query->where("users_blocked_by_me.object_id","!=",$userId);
                     $query->orWhere("users_blocked_by_me.object_id",null);
                 });
-                $query->orWhere(function($query)use($blockedUsersTable,$userId){
+                $query->where(function($query)use($blockedUsersTable,$userId){
                     $query->where("users_who_blocked_me.subject_id","!=",$userId);
                     $query->orWhere("users_who_blocked_me.object_id",null);
                 });
             })
+            ->where($usersTable.".active",1)
             ->leftJoin($interestsTable, $usersTable.".id",$interestsTable.".user_id")
             ->leftJoin($checkinsTable, $usersTable.".id",$checkinsTable.".user_id")
-            ->leftJoin($blockedUsersTable." as users_blocked_by_me", "users_blocked_by_me.subject_id",$usersTable.".id") //ignoring blocked users
-            ->leftJoin($blockedUsersTable." as users_who_blocked_me", "users_who_blocked_me.object_id",$usersTable.".id") //ignoring blocked users
-            //->groupBy(array_merge($userFields,[]))
+            ->leftJoin($blockedUsersTable." as users_blocked_by_me", "users_blocked_by_me.subject_id",$usersTable.".id") //ignoring users blocked by me
+            ->leftJoin($blockedUsersTable." as users_who_blocked_me", "users_who_blocked_me.object_id",$usersTable.".id") //ignoring users who blocked me
+            ->groupBy(array_merge($userFields,[]))
             ->get();
     }
 
@@ -173,6 +193,7 @@ class UsersRepository extends Repository
             ->select($userFields)
             ->where($checkinsTable.".location_id",$locationId)
             ->where($checkinsTable.".checked_out",null)
+            ->where($usersTable.".active",1)
             ->leftJoin($interestsTable, $usersTable.".id",$interestsTable.".user_id")
             ->leftJoin($checkinsTable, $usersTable.".id",$checkinsTable.".user_id")
             ->groupBy($userFields)
@@ -220,35 +241,35 @@ class UsersRepository extends Repository
 
     public function getByIds($ids = [])
     {
-        return  $this->getModel()->whereIn('id', $ids)->get();
+        $usersTable = $this->getModel()->getTable();
+        return  $this->getModel()
+            ->whereIn('id', $ids)
+            ->where($usersTable.".active",1)
+            ->get();
     }
 
     public function findByEmail($email)
     {
-        return  $this->getModel()->where('email', $email)->first();
+        $usersTable = $this->getModel()->getTable();
+        return  $this->getModel()->where('email', $email)
+            ->where($usersTable.".active",1)
+            ->first();
     }
 
     public function findByFbId($fbid)
     {
-        return $this->getModel()->where('fb_id',$fbid)->first();
+        $usersTable = $this->getModel()->getTable();
+        return $this->getModel()->where('fb_id',$fbid)
+            ->where($usersTable.".active",1)
+            ->first();
     }
 
     public function findByToken($token)
     {
-        return  $this->getModel()->where('access_token', $token)->first();
-    }
-
-    public function franchises()
-    {
-        return $this->getModel()->where('role', 2)->with('info')->get();
-    }
-    public function customers()
-    {
-        return $this->getModel()->where('role', 3)->get();
-    }
-    public function admins()
-    {
-        return $this->getModel()->where('role', 1)->get();
+        $usersTable = $this->getModel()->getTable();
+        return  $this->getModel()->where('access_token', $token)
+            ->where($usersTable.".active",1)
+            ->first();
     }
 
     private function getUserTableFields()

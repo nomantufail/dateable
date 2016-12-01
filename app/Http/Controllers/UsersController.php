@@ -10,6 +10,7 @@ use App\Repositories\UsersRepository;
 use Requests\BlockUserRequest;
 use Requests\CheckinUserRequest;
 use Requests\CheckoutUserRequest;
+use Requests\DeactivateUserRequest;
 use Requests\GetBlockedUsersRequest;
 use Requests\GetUsersStatusOnLocationRequest;
 use Requests\LikeUserRequest;
@@ -93,5 +94,11 @@ class UsersController extends ParentController
             'datables' => $this->users->countDatablesAtLocation($request->get('location_id'), $request->user->id),
             'checkedIns' => $this->users->countCheckInsAtLocation($request->get('location_id')),
         ]]);
+    }
+
+    public function deactivate(DeactivateUserRequest $request)
+    {
+        $this->users->updateWhere(['id'=>$request->user->id],['active'=>0]);
+        return $this->response->respond();
     }
 }
