@@ -130,25 +130,20 @@ class UsersRepository extends Repository
         /** @var UserInterests $interests */
         $usersTable = $this->getModel()->getTable();
         return DB::table('users')
-            ->select(DB::raw(join(',',$userFields).",
-                CASE
-                    WHEN bu.object_id is Null
-                        THEN
-                            0
-                        else
-                            bu.object_id
-                END as blocked_by
-             "))
+            ->select(DB::raw(join(',',$userFields)))
             ->where($checkinsTable.".location_id",$locationId)
             ->where($checkinsTable.".checked_out",null)
             ->where(function ($query)use ($user){
                 $this->QUERY_usersIamInterestedIn($query, $user);
             })
+            ->where(function($query)use($blockedUsersTable,$userId){
+                $query->where($blockedUsersTable.".object_id","!=",$userId);
+                $query->orWhere($blockedUsersTable.".object_id",null);
+            })
             ->leftJoin($interestsTable, $usersTable.".id",$interestsTable.".user_id")
             ->leftJoin($checkinsTable, $usersTable.".id",$checkinsTable.".user_id")
-            ->leftJoin($blockedUsersTable." as bu", "bu.subject_id",$usersTable.".id") //ignoring blocked users
-            ->groupBy(array_merge($userFields,['blocked_by']))
-            ->having("blocked_by",'>',"".$user->id)
+            ->leftJoin($blockedUsersTable, $blockedUsersTable.".subject_id",$usersTable.".id") //ignoring blocked users
+            ->groupBy(array_merge($userFields,[]))
             ->get();
     }
 
@@ -175,7 +170,6 @@ class UsersRepository extends Repository
         $blockedUsersTable = (new BlockedUser())->getModel()->getTable();
 
         $query->where($usersTable.".id",'!=',$user->id); /** excluding current logged in user. */
-
         /** Age matching */
         $query->where(DB::raw("DATEDIFF(CURDATE(), ".$this->getModel()->getTable().".birthday)/365"),'>=',$interests->age_min)
             ->Where(DB::raw("DATEDIFF(CURDATE(), ".$this->getModel()->getTable().".birthday)/365"),'<=',$interests->age_max);
