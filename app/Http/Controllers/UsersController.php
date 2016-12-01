@@ -14,6 +14,7 @@ use Requests\GetBlockedUsersRequest;
 use Requests\GetUsersStatusOnLocationRequest;
 use Requests\LikeUserRequest;
 use Requests\UnblockUserRequest;
+use Requests\UpdateUserInterestsRequest;
 
 class UsersController extends ParentController
 {
@@ -74,6 +75,15 @@ class UsersController extends ParentController
     {
         return $this->response->respond(['data'=>[
             'users' => $this->users->getBlockedUsersByUserId($request->user->id)
+        ]]);
+    }
+
+    public function updateInterests(UpdateUserInterestsRequest $request)
+    {
+        $this->users->updateInterestsWhere(['user_id'=>$request->user->id],['age_min' => $request->get('age_min'), 'age_max'=>$request->get('age_max')]);
+        $this->users->updateWhere(['id'=>$request->user->id],['about'=>$request->get('about')]);
+        return $this->response->respond(['data'=>[
+            'user'=>$this->users->findById($request->user->id)
         ]]);
     }
 

@@ -24,3 +24,4 @@ Route::post('/user/block', 'UsersController@block')->middleware('requestHandler:
 Route::post('/user/unblock', 'UsersController@unblock')->middleware('requestHandler:UnblockUserRequest');
 Route::post('/user/like', 'UsersController@like')->middleware('requestHandler:LikeUserRequest');
 Route::get('/users/blocked', 'UsersController@blockedUsers')->middleware('requestHandler:GetBlockedUsersRequest');
+Route::post('/user/interests/update', 'UsersController@updateInterests')->middleware('requestHandler:UpdateUserInterestsRequest');

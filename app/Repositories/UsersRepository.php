@@ -45,6 +45,16 @@ class UsersRepository extends Repository
         return (new BlockedUser())->where($where)->delete();
     }
 
+    public function updateInterestsWhere($where, $data)
+    {
+        return (new UserInterests())->where($where)->update($data);
+    }
+
+    public function updateWhere($where, $data)
+    {
+        return $this->getModel()->where($where)->update($data);
+    }
+
     public function getBlockedUsersByUserId($userId)
     {
         $usersTable = $this->getModel()->getTable();
@@ -75,7 +85,6 @@ class UsersRepository extends Repository
 
     public function getMatches($locationId, $userId)
     {
-        //['user_interests.age_min','user_interests.age_max','user_interests.gender']
         $usersTable = $this->getModel()->getTable();
         $user = $this->findById($userId);
         $interests = $user->interests;
@@ -129,7 +138,7 @@ class UsersRepository extends Repository
         $blockedUsersTable = (new BlockedUser())->getModel()->getTable();
         /** @var UserInterests $interests */
         $usersTable = $this->getModel()->getTable();
-        return DB::table('users')
+        return $this->getModel()
             ->select(DB::raw(join(',',$userFields)))
             ->where($checkinsTable.".location_id",$locationId)
             ->where($checkinsTable.".checked_out",null)
@@ -137,13 +146,20 @@ class UsersRepository extends Repository
                 $this->QUERY_usersIamInterestedIn($query, $user);
             })
             ->where(function($query)use($blockedUsersTable,$userId){
-                $query->where($blockedUsersTable.".object_id","!=",$userId);
-                $query->orWhere($blockedUsersTable.".object_id",null);
+                $query->where(function($query)use($blockedUsersTable,$userId){
+                    $query->where("users_blocked_by_me.object_id","!=",$userId);
+                    $query->orWhere("users_blocked_by_me.object_id",null);
+                });
+                $query->orWhere(function($query)use($blockedUsersTable,$userId){
+                    $query->where("users_who_blocked_me.subject_id","!=",$userId);
+                    $query->orWhere("users_who_blocked_me.object_id",null);
+                });
             })
             ->leftJoin($interestsTable, $usersTable.".id",$interestsTable.".user_id")
             ->leftJoin($checkinsTable, $usersTable.".id",$checkinsTable.".user_id")
-            ->leftJoin($blockedUsersTable, $blockedUsersTable.".subject_id",$usersTable.".id") //ignoring blocked users
-            ->groupBy(array_merge($userFields,[]))
+            ->leftJoin($blockedUsersTable." as users_blocked_by_me", "users_blocked_by_me.subject_id",$usersTable.".id") //ignoring blocked users
+            ->leftJoin($blockedUsersTable." as users_who_blocked_me", "users_who_blocked_me.object_id",$usersTable.".id") //ignoring blocked users
+            //->groupBy(array_merge($userFields,[]))
             ->get();
     }
 
