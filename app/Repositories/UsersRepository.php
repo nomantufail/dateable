@@ -72,10 +72,7 @@ class UsersRepository extends Repository
      */
     public function findBlockedUser($where)
     {
-        $usersTable = $this->getModel()->getTable();
-        return (new BlockedUser())->where($where)
-            ->where($usersTable.".active",1)
-            ->first();
+        return (new BlockedUser())->where($where)->first();
     }
 
     public function countDatablesAtLocation($locationId, $userId)
@@ -119,7 +116,7 @@ class UsersRepository extends Repository
                             false
                 END as interested_in_me
             "))
-            ->where($checkinsTable.".location_id",$locationId)
+            ->where($checkinsTable.".location_i",$locationId)
             ->where($checkinsTable.".checked_out",null)
             ->where(function($query)use($blockedUsersTable,$userId){
                 $query->where(function($query)use($blockedUsersTable,$userId){
