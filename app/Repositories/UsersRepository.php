@@ -126,18 +126,29 @@ class UsersRepository extends Repository
         $userFields = $this->getUserTableFields();
         $interestsTable = (new UserInterestsRepository())->getModel()->getTable();
         $checkinsTable = (new CheckedinsRepository())->getModel()->getTable();
+        $blockedUsersTable = (new BlockedUser())->getModel()->getTable();
         /** @var UserInterests $interests */
         $usersTable = $this->getModel()->getTable();
-        return $this->getModel()
-            ->select($userFields)
+        return DB::table('users')
+            ->select(DB::raw(join(',',$userFields).",
+                CASE
+                    WHEN bu.object_id is Null
+                        THEN
+                            0
+                        else
+                            bu.object_id
+                END as blocked_by
+             "))
             ->where($checkinsTable.".location_id",$locationId)
             ->where($checkinsTable.".checked_out",null)
-            ->Where(function ($query)use ($user){
+            ->where(function ($query)use ($user){
                 $this->QUERY_usersIamInterestedIn($query, $user);
             })
             ->leftJoin($interestsTable, $usersTable.".id",$interestsTable.".user_id")
             ->leftJoin($checkinsTable, $usersTable.".id",$checkinsTable.".user_id")
-            ->groupBy($userFields)
+            ->leftJoin($blockedUsersTable." as bu", "bu.subject_id",$usersTable.".id") //ignoring blocked users
+            ->groupBy(array_merge($userFields,['blocked_by']))
+            ->having("blocked_by",'>',"".$user->id)
             ->get();
     }
 
@@ -161,6 +172,7 @@ class UsersRepository extends Repository
     {
         $usersTable = $this->getModel()->getTable();
         $interests = $user->interests;
+        $blockedUsersTable = (new BlockedUser())->getModel()->getTable();
 
         $query->where($usersTable.".id",'!=',$user->id); /** excluding current logged in user. */
 
@@ -180,6 +192,7 @@ class UsersRepository extends Repository
         $usersTable = $this->getModel()->getTable();
         $interests = $user->interests;
         $interestsTable = (new UserInterestsRepository())->getModel()->getTable();
+        $blockedUsersTable = (new BlockedUser())->getModel()->getTable();
         $myAge = Carbon::createFromFormat('Y-m-d',$user->birthday)->diff(Carbon::now())->days/365;
 
         $query->where($usersTable.".id",'!=',$user->id); /** excluding current logged in user. */

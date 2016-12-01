@@ -13,6 +13,7 @@ class User extends AuthenticatableModel
     public $first_name = "";
     public $last_name = "";
     public $email = "";
+    public $about = "";
     public $password = "";
     public $fb_id = 0;
     public $access_token = "";

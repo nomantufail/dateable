@@ -33,8 +33,8 @@ class UsersController extends ParentController
     {
         try{
             $this->checkIns->checkoutPreviousCheckIns($request->user->id);
+            $this->checkIns->store($request->checkedIn());
             return $this->response->respond(['data'=>[
-                'checkIn' => $this->checkIns->store($request->checkedIn()),
                 'checkIns' => $this->users->getCheckInsAtLocation($request->get('location_id')),
                 'datables' => $this->users->getDatablesAtLocation($request->get('location_id'), $request->user->id)
             ]]);
@@ -60,7 +60,8 @@ class UsersController extends ParentController
 
     public function block(BlockUserRequest $request)
     {
-        return $this->response->respond(['data'=>$this->users->blockUser($request->blockedUserModel())]);
+        $this->users->blockUser($request->blockedUserModel());
+        return $this->response->respond();
     }
 
     public function unblock(UnblockUserRequest $request)
