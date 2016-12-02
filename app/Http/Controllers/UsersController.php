@@ -37,8 +37,7 @@ class UsersController extends ParentController
             $this->checkIns->checkoutPreviousCheckIns($request->user->id);
             $this->checkIns->store($request->checkedIn());
             return $this->response->respond(['data'=>[
-                'checkIns' => $this->users->getCheckInsAtLocation($request->get('location_id')),
-                'datables' => $this->users->getDatablesAtLocation($request->get('location_id'), $request->user->id)
+                'checkIns' => $this->users->getCheckInsAtLocation($request->get('location_id'),$request->user->id)
             ]]);
         }catch (\Exception $e){
             return $this->response->respondInternalServerError($e->getMessage());
@@ -92,7 +91,7 @@ class UsersController extends ParentController
     {
         return $this->response->respond(['data'=>[
             'datables' => $this->users->countDatablesAtLocation($request->get('location_id'), $request->user->id),
-            'checkedIns' => $this->users->countCheckInsAtLocation($request->get('location_id')),
+            'checkedIns' => $this->users->countCheckInsAtLocation($request->get('location_id'), $request->user->id),
         ]]);
     }
 
