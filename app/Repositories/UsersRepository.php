@@ -134,6 +134,7 @@ class UsersRepository extends Repository
             "))
             ->where($checkinsTable.".location_id",$locationId)
             ->where($checkinsTable.".checked_out",null)
+            ->where($usersTable.".id",'!=',$user->id) /** excluding current logged in user. */
             ->where(function($query)use($blockedUsersTable,$userId){
                 $query->where(function($query)use($blockedUsersTable,$userId){
                     $query->where("users_blocked_by_me.object_id","!=",$userId);
@@ -176,6 +177,7 @@ class UsersRepository extends Repository
             ->select(DB::raw(join(',',$userFields)))
             ->where($checkinsTable.".location_id",$locationId)
             ->where($checkinsTable.".checked_out",null)
+            ->where($usersTable.".id",'!=',$user->id) /** excluding current logged in user. */
             ->where(function ($query)use ($user){
                 $this->QUERY_usersIamInterestedIn($query, $user);
             })
@@ -244,6 +246,7 @@ class UsersRepository extends Repository
                             false
                 END as i_like_him
             "))
+            ->where($usersTable.".id",'!=',$user->id) /** excluding current logged in user. */
             ->where($checkinsTable.".location_id",$locationId)
             ->where($checkinsTable.".checked_out",null)
             ->where(function($query)use($blockedUsersTable,$userId){
@@ -280,7 +283,6 @@ class UsersRepository extends Repository
         $interests = $user->interests;
         $blockedUsersTable = (new BlockedUser())->getModel()->getTable();
 
-        $query->where($usersTable.".id",'!=',$user->id); /** excluding current logged in user. */
         /** Age matching */
         $query->where(DB::raw("DATEDIFF(CURDATE(), ".$this->getModel()->getTable().".birthday)/365"),'>=',$interests->age_min)
             ->Where(DB::raw("DATEDIFF(CURDATE(), ".$this->getModel()->getTable().".birthday)/365"),'<=',$interests->age_max);
