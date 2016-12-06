@@ -31,7 +31,6 @@ class UpdateUserInterestsRequest extends Request
             'age_min' => 'required',
             'age_max' => 'required',
             'gender' => 'required',
-            'about' => 'required'
         ];
     }
 }
