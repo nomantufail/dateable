@@ -9,6 +9,7 @@ class AutoCheckoutRequest extends Request
 
     public function __construct(){
         parent::__construct();
+        $this->authenticatable = false;
     }
     /**
      * Determine if the user is authorized to make this request.
