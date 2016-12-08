@@ -141,7 +141,7 @@ class UsersRepository extends Repository
                         $he_blocked_me = 1;
                 });
                 $i_blocked_him = 0;
-                $user->blockedUsers->each(function($blockingUser) use($userId, &$i_blocked_him){
+                $user->blockedBy->each(function($blockingUser) use($userId, &$i_blocked_him){
                     if($blockingUser->object_id == $userId)
                         $i_blocked_him = 1;
                 });
@@ -195,7 +195,7 @@ class UsersRepository extends Repository
                         $he_blocked_me = 1;
                 });
                 $i_blocked_him = 0;
-                $user->blockedUsers->each(function($blockingUser) use($userId, &$i_blocked_him){
+                $user->blockedBy->each(function($blockingUser) use($userId, &$i_blocked_him){
                     if($blockingUser->object_id == $userId)
                         $i_blocked_him = 1;
                 });
@@ -267,9 +267,10 @@ class UsersRepository extends Repository
                         $he_blocked_me = 1;
                 });
                 $i_blocked_him = 0;
-                $user->blockedUsers->each(function($blockingUser) use($userId, &$i_blocked_him){
-                    if($blockingUser->object_id == $userId)
+                $user->blockedBy->each(function($blockingUser) use($userId, &$i_blocked_him){
+                    if($blockingUser->object_id == $userId){
                         $i_blocked_him = 1;
+                    }
                 });
                 if(!$he_blocked_me && !$i_blocked_him){
                     $user->likedUsers->each(function($likedUser) use($userId,&$user){
