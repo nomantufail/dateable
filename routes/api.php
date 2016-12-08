@@ -28,4 +28,4 @@ Route::get('/users/blocked', 'UsersController@blockedUsers')->middleware('reques
 Route::post('/user/interests/update', 'UsersController@updateInterests')->middleware('requestHandler:UpdateUserInterestsRequest');
 Route::post('/user/account/deactivate', 'UsersController@deactivate')->middleware('requestHandler:DeactivateUserRequest');
 Route::post('/user/send_heartbeat', 'UsersController@heartBeat')->middleware('requestHandler:HeartbeatRequest');
-Route::post('/crone', 'CronesController@autoCheckout')->middleware('requestHandler:AutoCheckoutRequest');
+Route::post('/cron', 'CronesController@autoCheckout')->middleware('requestHandler:AutoCheckoutRequest');
