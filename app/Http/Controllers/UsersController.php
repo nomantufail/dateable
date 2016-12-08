@@ -7,6 +7,7 @@ use App\Http\Response;
 use App\Repositories\CheckedinsRepository;
 use App\Repositories\LikedUsersRepository;
 use App\Repositories\UsersRepository;
+use App\Traits\Transformers\UsersControllerTransformer;
 use Requests\BlockUserRequest;
 use Requests\CheckinUserRequest;
 use Requests\CheckoutUserRequest;
@@ -21,6 +22,8 @@ use Requests\UpdateUserInterestsRequest;
 
 class UsersController extends ParentController
 {
+    use UsersControllerTransformer;
+
     public $users = null;
     public $checkIns = null;
     public $response = null;
@@ -39,7 +42,7 @@ class UsersController extends ParentController
             $this->checkIns->checkoutPreviousCheckIns($request->user->id);
             $this->checkIns->store($request->checkedIn());
             return $this->response->respond(['data'=>[
-                'checkIns' => $this->users->getCheckInsAtLocation($request->get('location_id'),$request->user->id)
+                'checkIns' => $this->transformCheckins($this->users->getCheckInsAtLocation($request->get('location_id'),$request->user->id))
             ]]);
         }catch (\Exception $e){
             return $this->response->respondInternalServerError($e->getMessage());

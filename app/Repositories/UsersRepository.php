@@ -214,6 +214,77 @@ class UsersRepository extends Repository
 
         /** @var UserInterests $interests */
         $usersTable = $this->getModel()->getTable();
+        $users = [];
+        $this->getModel()
+            //finding who is interested in whom?
+            ->select(DB::raw(" users.*,
+                CASE
+                    WHEN DATEDIFF(CURDATE(), ".$usersTable.".birthday)/365 >= ".$interests->age_min." AND DATEDIFF(CURDATE(), ".$usersTable.".birthday)/365 <= ".$interests->age_max.(($interests->gender != 2)?" AND ".$usersTable.".gender = ".$interests->gender:"")."
+                        THEN
+                            true
+                        else
+                            false
+                END as i_am_interested_in ,
+                CASE
+                    WHEN ".$interestsTable.".age_min <= ".$myAge." AND ".$interestsTable.".age_max >= ".$myAge.(($interests->gender != 2)?" AND ".$interestsTable.".gender = ".$user->gender:"")."
+                        THEN
+                            true
+                        else
+                            false
+                END as interested_in_me
+            "))
+            ->where($usersTable.".id",'!=',$user->id) /** excluding current logged in user. */
+            ->where($checkinsTable.".location_id",$locationId)
+            ->where($checkinsTable.".checked_out",null)
+            ->where($usersTable.".active",1)
+            ->with('blockedUsers','blockedBy')
+            ->with('likedUsers','likedBy')
+            ->leftJoin($interestsTable, $usersTable.".id",$interestsTable.".user_id")
+            ->leftJoin($checkinsTable, $usersTable.".id",$checkinsTable.".user_id")
+            ->groupBy(array_merge($userFields,['interested_in_me','i_am_interested_in']))
+            ->get()->each(function($user) use($userId, &$users){
+                $user->he_like_me = 0;
+                $user->i_like_him = 0;
+
+                $he_blocked_me = 0;
+                $user->blockedUsers->each(function($blockedUser) use($userId, &$he_blocked_me){
+                    if($blockedUser->subject_id == $userId)
+                        $he_blocked_me = 1;
+                });
+                $i_blocked_him = 0;
+                $user->blockedUsers->each(function($blockingUser) use($userId, &$i_blocked_him){
+                    if($blockingUser->object_id == $userId)
+                        $i_blocked_him = 1;
+                });
+                if(!$he_blocked_me && !$i_blocked_him){
+                    $user->likedUsers->each(function($likedUser) use($userId,&$user){
+                        if($likedUser->subject_id == $userId)
+                            $user->he_like_me = 1;
+                    });
+                    $user->likedBy->each(function($likingUser) use($userId,&$user){
+                        if($likingUser->object_id == $userId)
+                            $user->i_like_him = 1;
+                    });
+
+                    $users[] = $user;
+                }
+            });
+        return $users;
+    }
+    public function getCheckInsAtLocation_depricated($locationId, $userId)
+    {
+        $usersTable = $this->getModel()->getTable();
+        $user = $this->findById($userId);
+        $interests = $user->interests;
+        $userFields = $this->getUserTableFields();
+        $interestsTable = (new UserInterestsRepository())->getModel()->getTable();
+        $checkinsTable = (new CheckedinsRepository())->getModel()->getTable();
+        $blockedUsersTable = (new BlockedUser())->getModel()->getTable();
+        $likedUsersTable = (new LikedUsersRepository())->getModel()->getTable();
+        $myAge = Carbon::createFromFormat('Y-m-d',$user->birthday)->diff(Carbon::now())->days/365;
+
+        /** @var UserInterests $interests */
+        $usersTable = $this->getModel()->getTable();
         return $this->getModel()
             //finding who is interested in whom?
             ->select(DB::raw(" users.*,
@@ -267,11 +338,11 @@ class UsersRepository extends Repository
     {
         $blockedUsersTable = (new BlockedUser())->getModel()->getTable();
         $query->where(function($query)use($blockedUsersTable,$userId){
-            $query->where("users_blocked_by_me.object_id","!=",$userId);
+            $query->where("users_blocked_by_me.subject_id","!=",$userId);
             $query->orWhere("users_blocked_by_me.object_id",null);
         });
         $query->where(function($query)use($blockedUsersTable,$userId){
-            $query->where("users_who_blocked_me.subject_id","!=",$userId);
+            $query->where("users_who_blocked_me.object_id","!=",$userId);
             $query->orWhere("users_who_blocked_me.object_id",null);
         });
         return $query;
