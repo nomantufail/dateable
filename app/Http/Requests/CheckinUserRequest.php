@@ -3,6 +3,7 @@
 namespace Requests;
 
 use App\Models\CheckedIn;
+use Carbon\Carbon;
 use Requests\Request;
 
 class CheckinUserRequest extends Request
@@ -36,7 +37,9 @@ class CheckinUserRequest extends Request
         $checkedIn->lat = $this->get('lat');
         $checkedIn->long = $this->get('long');
         $checkedIn->user_id = $this->user->id;
-        $checkedIn->checked_in = date('Y-m-d H:i:s');
+        $checkedIn->checked_in = Carbon::now()->toDateTimeString();
+        $checkedIn->created_at = Carbon::now()->toDateTimeString();
+        $checkedIn->updated_at = Carbon::now()->toDateTimeString();
         return $checkedIn;
     }
 }
