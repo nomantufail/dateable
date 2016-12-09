@@ -4,7 +4,7 @@ namespace Requests;
 
 use Requests\Request;
 
-class CroneRequest extends Request
+class AutoCheckoutRequest extends Request
 {
 
     public function __construct(){

@@ -10,6 +10,7 @@ namespace App\Repositories;
 
 use App\Models\CheckedIn;
 use App\User;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class CheckedinsRepository extends Repository
@@ -35,16 +36,14 @@ class CheckedinsRepository extends Repository
             ->where('checked_out',null)->update([]);
     }
 
-    public function crone()
+    public function autoCheckout()
     {
         $checkedIns = $this->getModel()->getTable();
-
-        return $this->getModel()
-            ->Where(DB::raw("DATEDIFF($checkedIns.checked_in , $checkedIns.updated_at)*1440"),'=','5')
+        $now = Carbon::now();
+        return $this->getModel()->select(DB::raw("TIMESTAMPDIFF(minute, $checkedIns.updated_at, '$now')"))
+            ->where(DB::raw("TIMESTAMPDIFF(minute, $checkedIns.updated_at, '$now')"),'>','5')
+            ->where('checked_out' , null)
             ->update(['checked_out'=>date('Y-m-d H:i:s')]);
-
-
-
     }
 
 

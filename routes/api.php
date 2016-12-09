@@ -15,12 +15,7 @@ use Illuminate\Http\Request;
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:api');
-Route::get('cron',function(){
-    \Illuminate\Support\Facades\DB::table('blocked_users')->insert([
-        'object_id' => 1,
-        'subject_id' => 1
-    ]);
-});
+
 
 Route::post('/fblogin', 'Auth\LoginController@fblogin')->middleware('requestHandler:FbLoginRequest');
 Route::post('/user/checkin', 'UsersController@postCheckIn')->middleware('requestHandler:CheckinUserRequest');
@@ -33,4 +28,4 @@ Route::get('/users/blocked', 'UsersController@blockedUsers')->middleware('reques
 Route::post('/user/interests/update', 'UsersController@updateInterests')->middleware('requestHandler:UpdateUserInterestsRequest');
 Route::post('/user/account/deactivate', 'UsersController@deactivate')->middleware('requestHandler:DeactivateUserRequest');
 Route::post('/user/send_heartbeat', 'UsersController@heartBeat')->middleware('requestHandler:HeartbeatRequest');
-Route::post('/crone', 'UsersController@crone')->middleware('requestHandler:CroneRequest');
+Route::post('/crone', 'CronesController@autoCheckout')->middleware('requestHandler:AutoCheckoutRequest');
