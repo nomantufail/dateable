@@ -110,8 +110,4 @@ class UsersController extends ParentController
     {
         $this->checkIns->checkHeart($request->user->id);
     }
-    public function crone(CroneRequest $request)
-    {
-        $this->checkIns->crone();
-    }
 }
