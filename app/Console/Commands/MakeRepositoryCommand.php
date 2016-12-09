@@ -59,6 +59,6 @@ class MakeRepositoryCommand extends Command
 
     public function getStub()
     {
-        return app_path('Libs/Stubs/repository.stub');
+        return app_path('Stubs/repository.stub');
     }
 }

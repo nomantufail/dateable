@@ -7,7 +7,7 @@ class RequestMakeCommand extends ParentRequestMakeCommand
 {
     protected function getStub()
     {
-        return app_path('Libs/Stubs/request.stub');
+        return app_path('Stubs/request.stub');
     }
 
     /**

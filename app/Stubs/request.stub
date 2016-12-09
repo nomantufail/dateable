@@ -4,7 +4,7 @@ namespace Requests;
 
 use Requests\Request;
 
-class UpdateUserInterestsRequest extends Request
+class DummyClass extends Request
 {
 
     public function __construct(){
@@ -28,9 +28,7 @@ class UpdateUserInterestsRequest extends Request
     public function rules()
     {
         return [
-            'age_min' => 'required',
-            'age_max' => 'required',
-            'gender' => 'required',
+            //
         ];
     }
 }

@@ -334,10 +334,7 @@ class UsersRepository extends Repository
 
     public function findByFbId($fbid)
     {
-        $usersTable = $this->getModel()->getTable();
-        return $this->getModel()->where('fb_id',$fbid)
-            ->where($usersTable.".active",1)
-            ->first();
+        return $this->getModel()->where('fb_id',$fbid)->first();
     }
 
     public function findByToken($token)
