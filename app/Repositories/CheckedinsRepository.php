@@ -29,4 +29,24 @@ class CheckedinsRepository extends Repository
             ->where('checked_out',null)->update(['checked_out'=>date('Y-m-d H:i:s')]);
     }
 
+    public function checkHeart($userId)
+    {
+        return $this->getModel()->where('user_id',$userId)
+            ->where('checked_out',null)->update([]);
+    }
+
+    public function crone()
+    {
+        $checkedIns = $this->getModel()->getTable();
+
+        return $this->getModel()
+            ->Where(DB::raw("DATEDIFF($checkedIns.checked_in , $checkedIns.updated_at)*1440"),'=','5')
+            ->update(['checked_out'=>date('Y-m-d H:i:s')]);
+
+
+
+    }
+
+
+
 }

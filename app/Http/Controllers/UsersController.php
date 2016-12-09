@@ -10,9 +10,11 @@ use App\Repositories\UsersRepository;
 use Requests\BlockUserRequest;
 use Requests\CheckinUserRequest;
 use Requests\CheckoutUserRequest;
+use Requests\CroneRequest;
 use Requests\DeactivateUserRequest;
 use Requests\GetBlockedUsersRequest;
 use Requests\GetUsersStatusOnLocationRequest;
+use Requests\HeartbeatRequest;
 use Requests\LikeUserRequest;
 use Requests\UnblockUserRequest;
 use Requests\UpdateUserInterestsRequest;
@@ -99,5 +101,14 @@ class UsersController extends ParentController
     {
         $this->users->updateWhere(['id'=>$request->user->id],['active'=>0]);
         return $this->response->respond();
+    }
+
+    public function heartBeat(HeartbeatRequest $request)
+    {
+        $this->checkIns->checkHeart($request->user->id);
+    }
+    public function crone(CroneRequest $request)
+    {
+        $this->checkIns->crone();
     }
 }
