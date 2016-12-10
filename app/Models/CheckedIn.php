@@ -12,6 +12,8 @@ class CheckedIn extends Model
     public $lat = 0;
     public $long = 0;
     public $checked_in = "";
+    public $created_at = "";
+    public $updated_at = "";
 
     public function user()
     {
