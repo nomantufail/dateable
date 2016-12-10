@@ -109,9 +109,7 @@ class UsersController extends ParentController
     public function heartBeat(HeartbeatRequest $request)
     {
         $this->checkIns->checkHeart($request->user->id);
+        return $this->response->respond();
     }
-    public function crone(CroneRequest $request)
-    {
-        $this->checkIns->crone();
-    }
+
 }

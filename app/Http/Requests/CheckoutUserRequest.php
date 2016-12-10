@@ -28,7 +28,7 @@ class CheckoutUserRequest extends Request
     public function rules()
     {
         return [
-            'location_id' => 'required'
+            //
         ];
     }
 }
