@@ -13,6 +13,7 @@ use Requests\CheckinUserRequest;
 use Requests\CheckoutUserRequest;
 use Requests\CroneRequest;
 use Requests\DeactivateUserRequest;
+use Requests\GetAllCheckedInUsersRequest;
 use Requests\GetBlockedUsersRequest;
 use Requests\GetUsersStatusOnLocationRequest;
 use Requests\HeartbeatRequest;
@@ -41,6 +42,17 @@ class UsersController extends ParentController
         try{
             $this->checkIns->checkoutPreviousCheckIns($request->user->id);
             $this->checkIns->store($request->checkedIn());
+            return $this->response->respond(['data'=>[
+                'checkIns' => $this->transformCheckins($this->users->getCheckInsAtLocation($request->get('location_id'),$request->user->id))
+            ]]);
+        }catch (\Exception $e){
+            return $this->response->respondInternalServerError($e->getMessage());
+        }
+    }
+
+    public function getAllCheckIns(GetAllCheckedInUsersRequest $request)
+    {
+        try{
             return $this->response->respond(['data'=>[
                 'checkIns' => $this->transformCheckins($this->users->getCheckInsAtLocation($request->get('location_id'),$request->user->id))
             ]]);
