@@ -59,7 +59,7 @@ class UsersController extends ParentController
         }catch (\Exception $e){
             return $this->response->respondInternalServerError($e->getMessage());
         }
-    }
+    } 
 
     public function like(LikeUserRequest $request)
     {
