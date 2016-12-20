@@ -85,7 +85,7 @@ class UsersController extends ParentController
 
     public function updateInterests(UpdateUserInterestsRequest $request)
     {
-        $this->users->updateInterestsWhere(['user_id'=>$request->user->id],['age_min' => $request->get('age_min'), 'age_max'=>$request->get('age_max')]);
+        $this->users->updateInterestsWhere(['user_id'=>$request->user->id],['age_min' => $request->get('age_min'), 'age_max'=>$request->get('age_max'), 'gender'=> $request->get('gender')]);
         $this->users->updateWhere(['id'=>$request->user->id],['about'=>$request->get('about')]);
         return $this->response->respond(['data'=>[
             'user'=>$this->users->findById($request->user->id)
