@@ -161,7 +161,7 @@ class UsersRepository extends Repository
         return $users;
     }
 
-    public function getDatablesAtLocation_UNDER_DEV($checkins)
+    public function getDatablesAtLocation($checkins)
     {
         $datables = [];
         collect($checkins)->each(function($checkedInUser)use($datables){
@@ -172,7 +172,7 @@ class UsersRepository extends Repository
         return $datables;
     }
 
-    public function getDatablesAtLocation($locationId, $userId)
+    public function getDatablesAtLocation_UNDER_DEV($locationId, $userId)
     {
         $user = $this->findById($userId);
         $userFields = $this->getUserTableFields();
