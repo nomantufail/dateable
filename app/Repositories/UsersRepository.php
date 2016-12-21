@@ -76,7 +76,7 @@ class UsersRepository extends Repository
         return (new BlockedUser())->where($where)->first();
     }
 
-    public function countDatablesAtLocation($locationId, $userId)
+/*    public function countDatablesAtLocation($locationId, $userId)
     {
         return collect($this->getDatablesAtLocation($locationId,$userId))->count();
     }
@@ -84,7 +84,7 @@ class UsersRepository extends Repository
     public function countCheckInsAtLocation($locationId, $userId)
     {
         return collect($this->getCheckInsAtLocation($locationId, $userId))->count();
-    }
+    }*/
 
     public function getMatches($locationId, $userId)
     {
