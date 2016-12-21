@@ -161,6 +161,17 @@ class UsersRepository extends Repository
         return $users;
     }
 
+    public function getDatablesAtLocation_UNDER_DEV($checkins)
+    {
+        $datables = [];
+        collect($checkins)->each(function($checkedInUser)use($datables){
+            if($checkedInUser->i_am_interested_in){
+                $datables[] = $checkedInUser;
+            }
+        });
+        return $datables;
+    }
+
     public function getDatablesAtLocation($locationId, $userId)
     {
         $user = $this->findById($userId);
