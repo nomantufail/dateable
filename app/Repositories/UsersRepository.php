@@ -164,7 +164,7 @@ class UsersRepository extends Repository
     public function getDatablesAtLocation($checkins)
     {
         $datables = [];
-        collect($checkins)->each(function($checkedInUser)use($datables){
+        collect($checkins)->each(function($checkedInUser)use(&$datables){
             if($checkedInUser->i_am_interested_in){
                 $datables[] = $checkedInUser;
             }
