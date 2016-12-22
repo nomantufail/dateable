@@ -8,6 +8,7 @@ use Migrations\Migration;
 
 abstract class Model extends EloquentModel
 {
+
     /**
      * @return Migration
      * */

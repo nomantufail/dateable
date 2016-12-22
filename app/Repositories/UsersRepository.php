@@ -27,14 +27,14 @@ class UsersRepository extends Repository
         return $user;
     }
 
-    public function getByIds($ids = [])
-    {
-        return  $this->getModel()->whereIn('id', $ids)->get();
-    }
-
     public function findByEmail($email)
     {
         return  $this->getModel()->where('email', $email)->first();
+    }
+
+    public function getByIds($ids = [])
+    {
+        return  $this->getModel()->whereIn('id', $ids)->get();
     }
 
     public function findByFbId($fbid)
