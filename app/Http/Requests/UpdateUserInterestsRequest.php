@@ -30,7 +30,7 @@ class UpdateUserInterestsRequest extends Request
         return [
             'age_min' => 'required',
             'age_max' => 'required',
-            'gender' => 'required',
+            'gender' => 'numeric|required|min:0|max:2',
         ];
     }
 }
