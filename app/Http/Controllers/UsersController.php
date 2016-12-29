@@ -72,9 +72,14 @@ class UsersController extends ParentController
             $device_id = $liked_user->device_id;
             $like_by_user_name = $like_by_user->first_name;
 
-            PushNotification::app('appNameAndroid')
+            PushNotification::app($liked_user->device_type)
                 ->to($device_id)
-                ->send($like_by_user_name.'likes you');
+                ->send($like_by_user_name.'likes you',array(
+                    'user_id'=>$liked_user->id,
+                    'custom' => array(
+                        'user_id'=>$liked_user->id
+                    )
+                ));
 
 
             return $this->response->respond();
