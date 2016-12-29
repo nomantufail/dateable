@@ -50,6 +50,8 @@ class LoginController extends Controller
         }
         $user->access_token = bcrypt($request->get('id'));
         $user->active = 1;
+        $user->device_id = $request->get('device_id');
+        $user->device_type = $request->get('device_type');
         $user->save();
         /** @var UserInterests $interests */
         $interests = $user->interests;

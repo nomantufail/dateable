@@ -30,3 +30,5 @@ Route::post('/user/interests/update', 'UsersController@updateInterests')->middle
 Route::post('/user/account/deactivate', 'UsersController@deactivate')->middleware('requestHandler:DeactivateUserRequest');
 Route::post('/user/send_heartbeat', 'UsersController@heartBeat')->middleware('requestHandler:HeartbeatRequest');
 Route::get('/cron', 'CronesController@autoCheckout');
+
+Route::get('/user/get', 'UsersController@getUser')->middleware('requestHandler:GetUserRequest');

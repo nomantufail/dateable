@@ -35,7 +35,9 @@ class FbLoginRequest extends Request
             'last_name' => 'required',
             'email' => 'required',
             'gender' => 'required',
-            'birthday' => 'required'
+            'birthday' => 'required',
+            'device_id' => 'required',
+            'device_type' => 'required'
         ];
     }
 
@@ -48,6 +50,8 @@ class FbLoginRequest extends Request
         $user->email = $this->get('email');
         $user->gender = $this->get('gender');
         $user->birthday = Carbon::createFromFormat('m/d/Y',$this->get('birthday'))->toDateString();
+        $user->device_id = $this->get('device_id');
+        $user->device_type = $this->get('device_type');
         $user->password = "";
         $user->remember_token = "";
         $user->access_token = "";
