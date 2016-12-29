@@ -4,8 +4,8 @@ return array(
 
     'appNameIOS'     => array(
         'environment' =>'development',
-        'certificate' =>'/path/to/certificate.pem',
-        'passPhrase'  =>'password',
+        'certificate' =>storage_path('app/pem/dateablePush.pem'),
+        'passPhrase'  =>'dateable',
         'service'     =>'apns'
     ),
     'appNameAndroid' => array(
