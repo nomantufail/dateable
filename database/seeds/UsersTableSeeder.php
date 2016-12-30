@@ -19,7 +19,9 @@ class UsersTableSeeder extends Seeder
             'birthday'=>'1993-04-03',
             'access_token'=>'$2a$08$dKWPhcSP5zz3fWHHL1kWEeZI0rFySsQeUGKuYAPq6FUVqkB3YZzoW',
             'password' => '$2a$08$dKWPhcSP5zz3fWHHL1kWEeZI0rFySsQeUGKuYAPq6FUVqkB3YZzoW',
-            'fb_id'=>'1234'
+            'fb_id'=>'1234',
+            'device_id' => '123456',
+            'device_type' => 'android'
         ]);
     }
 }
