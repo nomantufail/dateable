@@ -21,7 +21,8 @@ class LikedUsersRepository extends Repository
     public function removeLikesByObjectId($user_id)
     {
         return $this->getModel()
-            ->where('object_id', $user_id)->delete();
+            ->where('object_id', $user_id)
+            ->orWhere('subject_id', $user_id)->delete();
     }
 
 

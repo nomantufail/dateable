@@ -21,7 +21,8 @@ class BlockedUsersRepository extends Repository
 
     public function removeBlockedUserByObjectId($user_id)
     {
-        return DB::table('blocked_users')->where('object_id', $user_id)->delete();
+        return DB::table('blocked_users')->where('object_id', $user_id)
+            ->orWhere('subject_id', $user_id)->delete();
 
     }
 
