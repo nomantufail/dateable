@@ -18,6 +18,8 @@ Route::get('/', function () {
             'user_id'=>2
         ));
 
+
+
     PushNotification::app('appNameIOS')
         ->to("4bf8303c702d80abdb5f06878078a80b30d10f82557f9f3502a344b51fc23b18")
         ->send('fuck you agha',array(

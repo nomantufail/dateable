@@ -4,8 +4,12 @@ namespace App\Http\Controllers;
 
 
 use App\Http\Response;
+use App\Models\BlockedUser;
+use App\Models\UserInterests;
+use App\Repositories\BlockedUsersRepository;
 use App\Repositories\CheckedinsRepository;
 use App\Repositories\LikedUsersRepository;
+use App\Repositories\UserInterestsRepository;
 use App\Repositories\UsersRepository;
 use App\Traits\Transformers\UsersControllerTransformer;
 use Davibennun\LaravelPushNotification\Facades\PushNotification;
@@ -37,6 +41,8 @@ class UsersController extends ParentController
         $this->checkIns = $checkedIns;
         $this->response = new Response();
         $this->likes = new LikedUsersRepository();
+        $this->interests = new UserInterestsRepository();
+        $this->blockedUsers = new BlockedUsersRepository();
     }
 
     public function postCheckIn(CheckinUserRequest $request)
@@ -133,6 +139,11 @@ class UsersController extends ParentController
     public function deactivate(DeactivateUserRequest $request)
     {
         $this->users->updateWhere(['id'=>$request->user->id],['active'=>0]);
+        $this->likes->removeLikesByObjectId($request->user->id);
+        $this->blockedUsers->removeBlockedUserByObjectId($request->user->id);
+        $this->interests->updateWhere(['user_id' => $request->user->id], ['age_min' => 18 , 'age_max' => 30, 'gender' => 2]);
+        $this->checkIns->deactivateCheckIn($request->user->id);
+
         return $this->response->respond();
     }
 

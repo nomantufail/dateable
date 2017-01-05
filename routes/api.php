@@ -17,6 +17,8 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:api');
 
 
+
+
 Route::post('/fblogin', 'Auth\LoginController@fblogin')->middleware('requestHandler:FbLoginRequest');
 Route::post('/user/checkin', 'UsersController@postCheckIn')->middleware('requestHandler:CheckinUserRequest');
 Route::get('/user/checkins', 'UsersController@getAllCheckins')->middleware('requestHandler:GetAllCheckedInUsersRequest');

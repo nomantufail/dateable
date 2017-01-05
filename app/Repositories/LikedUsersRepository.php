@@ -17,4 +17,14 @@ class LikedUsersRepository extends Repository
     {
         $this->setModel(new LikedUser());
     }
+
+    public function removeLikesByObjectId($user_id)
+    {
+        return $this->getModel()
+            ->where('object_id', $user_id)->delete();
+    }
+
+
+
+
 }
