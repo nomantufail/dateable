@@ -422,14 +422,6 @@ class UsersRepository extends Repository
             ->get();
     }
 
-    public function getByIds($ids = [])
-    {
-        $usersTable = $this->getModel()->getTable();
-        return  $this->getModel()->where('email', $email)
-            ->where($usersTable.".active",1)
-            ->first();
-    }
-
     public function findByFbId($fbid)
     {
         return $this->getModel()->where('fb_id',$fbid)->first();
