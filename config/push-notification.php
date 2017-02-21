@@ -3,9 +3,9 @@
 return array(
 
     'ios' => array(
-        'environment' =>'development',
+        'environment' =>'production',
         'certificate' =>config_path('pem/dateablePush.pem'),
-        'passPhrase'  =>'dateable',
+        'passPhrase'  =>'mireapp',
         'service'     =>'apns'
     ),
     'android' => array(
