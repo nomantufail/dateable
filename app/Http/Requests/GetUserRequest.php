@@ -4,7 +4,7 @@ namespace Requests;
 
 use Requests\Request;
 
-class UpdateUserInterestsRequest extends Request
+class GetUserRequest extends Request
 {
 
     public function __construct(){
@@ -28,9 +28,7 @@ class UpdateUserInterestsRequest extends Request
     public function rules()
     {
         return [
-            'age_min' => 'required',
-            'age_max' => 'required',
-            'gender' => 'numeric|required|min:0|max:2',
+            'user_id' => 'required|exists:users,id'
         ];
     }
 }

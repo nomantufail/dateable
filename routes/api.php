@@ -17,6 +17,8 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:api');
 
 
+
+
 Route::post('/fblogin', 'Auth\LoginController@fblogin')->middleware('requestHandler:FbLoginRequest');
 Route::post('/user/checkin', 'UsersController@postCheckIn')->middleware('requestHandler:CheckinUserRequest');
 Route::get('/user/checkins', 'UsersController@getAllCheckins')->middleware('requestHandler:GetAllCheckedInUsersRequest');
@@ -30,11 +32,4 @@ Route::post('/user/interests/update', 'UsersController@updateInterests')->middle
 Route::post('/user/account/deactivate', 'UsersController@deactivate')->middleware('requestHandler:DeactivateUserRequest');
 Route::post('/user/send_heartbeat', 'UsersController@heartBeat')->middleware('requestHandler:HeartbeatRequest');
 Route::get('/cron', 'CronesController@autoCheckout');
-
-Route::get('/fileupload', function (Request $request) {
-    header("Content-Type: application/pdf");
-    header("Cache-Control: max-age=0");
-    header("Accept-Ranges: none");
-    header("Content-Disposition: attachment; filename=\"google_com.pdf\"");
-    echo "noman";
-});
+Route::get('/user/get', 'UsersController@getUser')->middleware('requestHandler:GetUserRequest');

@@ -21,6 +21,8 @@ class User extends AuthenticatableModel
     public $gender = 0;
     public $birthday = "";
     public $active = 1;
+    public $device_id = "";
+    public $device_type = "";
 
     /**
      * The attributes that are mass assignable.

@@ -46,6 +46,12 @@ class CheckedinsRepository extends Repository
             ->update(['checked_out'=>date('Y-m-d H:i:s')]);
     }
 
+    public function deactivateCheckIn($user_id)
+    {
+        return DB::table('checked_ins')->where('user_id', $user_id)->delete();
+
+    }
+
 
 
 }

@@ -8,24 +8,22 @@
 
 namespace App\Repositories;
 
+use App\Models\BlockedUser;
 use App\Models\LikedUser;
 use Illuminate\Support\Facades\DB;
 
-class LikedUsersRepository extends Repository
+class BlockedUsersRepository extends Repository
 {
     public function __construct()
     {
-        $this->setModel(new LikedUser());
+        $this->setModel(new BlockedUser());
     }
 
-    public function removeLikesByObjectId($user_id)
+    public function removeBlockedUserByObjectId($user_id)
     {
-        return $this->getModel()
-            ->where('object_id', $user_id)
+        return DB::table('blocked_users')->where('object_id', $user_id)
             ->orWhere('subject_id', $user_id)->delete();
+
     }
-
-
-
 
 }
