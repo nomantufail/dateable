@@ -55,6 +55,9 @@ class Auth
         return ((new UsersRepository())->findByToken($token) == null)?false:true;
     }
 
+    /**
+     * @return User $user
+     * */
     public static function user()
     {
         if(isset(getallheaders()['Authorization']) && getallheaders()['Authorization'] != ""){

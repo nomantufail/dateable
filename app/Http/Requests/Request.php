@@ -10,6 +10,7 @@ namespace Requests;
 
 
 use App\Libs\Auth\Auth;
+use App\User;
 
 abstract class Request
 {
@@ -17,11 +18,19 @@ abstract class Request
     /**
      * This variable defines weather a request should be authenticated or not.
      * */
+
+    /** @var User $user */
+    public $user = null;
     public $authenticatable = true;
     protected $autoTransform = false;
 
     public abstract function authorize();
     public abstract function rules();
+
+    public function __construct()
+    {
+        $this->user = $this->user();
+    }
 
     public function transform()
     {
@@ -63,6 +72,9 @@ abstract class Request
         return $this->originalRequest()->file($key);
     }
 
+    /**
+     * @return User $user
+     * */
     public function user()
     {
         return Auth::user();

@@ -7,7 +7,7 @@ class CreateUsersTable extends Migration
 {
     public function fields()
     {
-        return ['id','first_name','last_name','email','gender','birthday','password','fb_id','access_token','remember_token','updated_at','created_at'];
+        return ['id','first_name','last_name','email','about', 'gender','birthday','password','fb_id','access_token','remember_token', 'active', 'updated_at','created_at'];
     }
     /**
      * Run the migrations.
@@ -23,10 +23,12 @@ class CreateUsersTable extends Migration
             $table->tinyInteger('gender');
             $table->date('birthday');
             $table->string('email')->unique();
+            $table->text('about')->nullable();
             $table->string('password');
             $table->bigInteger('fb_id');
             $table->rememberToken();
             $table->string('access_token')->default('');
+            $table->tinyInteger('active')->default(1);
             $table->timestamps();
         });
     }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Response;
+use App\Models\UserInterests;
 use App\Repositories\UsersRepository;
 use App\User;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
@@ -48,11 +49,20 @@ class LoginController extends Controller
             $user = $this->users->store($request->getFbUser());
         }
         $user->access_token = bcrypt($request->get('id'));
+        $user->active = 1;
         $user->save();
-
+        /** @var UserInterests $interests */
+        $interests = $user->interests;
         return $this->response->respond([
             'data'=>[
-                'user' => $user
+                'user' => $user,
+                'interests' => (object)[
+                    'gender' => ($interests != null)?$interests->gender:2,
+                    'age'=>(object)[
+                        'min' => ($interests != null)?$interests->age_min:18,
+                        'max' => ($interests != null)?$interests->age_max:30,
+                    ]
+                ]
             ],
             'access_token' => $user->access_token
         ]);

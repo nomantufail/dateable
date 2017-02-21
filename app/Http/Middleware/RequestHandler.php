@@ -31,7 +31,8 @@ class RequestHandler
 
         if($customRequest->authenticatable){
             if(isset(getallheaders()['Authorization']) && getallheaders()['Authorization'] != ""){
-                return Auth::authenticateWithToken(getallheaders()['Authorization']);
+                if(!Auth::authenticateWithToken(getallheaders()['Authorization']))
+                    return $this->response->respondAuthenticationFailed();
             }else{
                 return $this->response->respondAuthenticationFailed();
             }

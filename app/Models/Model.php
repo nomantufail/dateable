@@ -34,7 +34,13 @@ abstract class Model extends EloquentModel
                 $this->attributes[$field] = $this->$field;
             }
         }
-        return parent::save();
+        parent::save();
+        foreach($this->attributes as $key=>$value){
+            if(isset($this->$key)){
+                $this->$key = $value;
+            }
+        }
+        return true;
     }
 
     public function fields()

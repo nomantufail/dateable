@@ -10,7 +10,7 @@ class CreateCheckedInsTable extends Migration
 
     public function fields()
     {
-        return ['id','user_id', 'lat','long','checked_in','checked_out','created_at','updated_at'];
+        return ['id','user_id','location_id', 'lat','long','checked_in','checked_out','created_at','updated_at'];
     }
 
     /**
@@ -23,10 +23,11 @@ class CreateCheckedInsTable extends Migration
         Schema::create($this->table, function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned()->index();
-            $table->double('lat')->default(0);
-            $table->double('long')->default(0);
-            $table->dateTime('checked_in');
-            $table->dateTime('checked_out');
+            $table->string('location_id')->default("");
+            $table->double('lat')->default(0)->nullable();
+            $table->double('long')->default(0)->nullable();
+            $table->dateTime('checked_in')->nullable();
+            $table->dateTime('checked_out')->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')
