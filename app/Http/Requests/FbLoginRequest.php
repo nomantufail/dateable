@@ -33,7 +33,7 @@ class FbLoginRequest extends Request
             'id' => 'required',
             'first_name' => 'required',
             'last_name' => 'required',
-            'email' => 'required',
+            'email' => 'required|unique:users',
             'gender' => 'required',
             'birthday' => 'required',
             'device_id' => 'required',
